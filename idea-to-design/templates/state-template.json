@@ -1,13 +1,37 @@
 {
+  "schema_version": "1.1",
+  "skill_name": "idea-to-design",
   "project_name": "",
+  "project_id": "",
   "product_type": "",
   "entry_mode": "start-from-idea",
   "current_phase": "scope",
   "approved_stage": "",
+  "last_updated": "",
+  "current_focus": {
+    "flow_id": "",
+    "page_id": "",
+    "task": "",
+    "reason": ""
+  },
+  "resume_packet": {
+    "status": "active",
+    "summary": "",
+    "last_completed_step": "",
+    "next_recommended_step": "",
+    "next_prompt_for_agent": "Read state.json, Design-Spec.md, and latest checkpoint if needed. Continue from the recorded current_phase and current_focus. Do not redo accepted work. Complete only the next_recommended_step, then update state.json.",
+    "blocking_questions": [],
+    "warnings": []
+  },
   "target_users": [],
   "current_scope": "",
   "non_goals": [],
   "success_criteria": [],
+  "references": {
+    "products": [],
+    "patterns": [],
+    "visual_direction": []
+  },
   "core_flows": [
     {
       "id": "FLOW-01",
@@ -15,7 +39,8 @@
       "goal": "",
       "priority": "core",
       "status": "draft",
-      "related_pages": []
+      "related_pages": [],
+      "notes": ""
     }
   ],
   "pages": [
@@ -27,7 +52,8 @@
       "fidelity": "L1",
       "status": "draft",
       "asset_refs": [],
-      "notes": ""
+      "notes": "",
+      "last_changed": ""
     }
   ],
   "design_direction": {
@@ -38,17 +64,42 @@
     "component_direction": "",
     "avoid": []
   },
+  "artifacts": {
+    "design_spec": {
+      "path": "Design-Spec.md",
+      "status": "draft",
+      "last_updated": ""
+    },
+    "assets_dir": "assets",
+    "checkpoints_dir": "checkpoints",
+    "key_assets": [],
+    "working_files": []
+  },
   "assets": {
     "wireframes": [],
     "mid_fi": [],
     "hi_fi": [],
     "rejected": []
   },
+  "checkpoints": [
+    {
+      "id": "CHK-001",
+      "phase": "scope",
+      "summary": "",
+      "timestamp": "",
+      "approved": false,
+      "state_snapshot_path": "",
+      "design_spec_snapshot_path": "",
+      "asset_refs": []
+    }
+  ],
   "open_questions": [],
   "decisions": [],
   "out_of_scope": [],
-  "working_files": {
-    "design_spec": "Design-Spec.md",
-    "assets_dir": "assets"
+  "handoff_notes": {
+    "for_next_session": "",
+    "must_read_files": [],
+    "do_not_redo": [],
+    "quality_bar": ""
   }
 }

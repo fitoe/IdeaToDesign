@@ -42,6 +42,8 @@ Use `idea-to-design` in one of three modes:
 
 When continuing work:
 - read `state.json` first
+- trust `resume_packet`, `current_focus`, and `handoff_notes` first
+- compare latest checkpoint only if current state looks stale or inconsistent
 - do not re-summarize prior discussion unless needed
 - update existing structure instead of rebuilding it
 
@@ -56,6 +58,14 @@ If project becomes too large:
 - cut scope
 - choose one primary journey
 - postpone non-core pages
+
+## Before Pausing
+
+Before ending or pausing a session, update:
+- `resume_packet.summary`
+- `resume_packet.next_recommended_step`
+- `resume_packet.next_prompt_for_agent`
+- `handoff_notes.for_next_session`
 
 ## Main Goal
 

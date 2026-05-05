@@ -15,10 +15,12 @@ Default outcome:
 - one formal design doc: `Design-Spec.md`
 - one design asset directory: `assets/`
 - one machine-readable state file: `state.json`
+- optional recovery snapshots in `checkpoints/`
 
 Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them
+- `state.json` is session continuity source of truth
 
 ## When to Use
 
@@ -87,6 +89,8 @@ Rules:
 - ask as few questions as possible
 - at most 1-3 critical questions before drafting
 - if scope too large, cut to one core subproblem
+- update `resume_packet` after scope changes
+- keep `next_prompt_for_agent` executable by a fresh session
 
 ### 2. Structure
 Goal:
@@ -103,6 +107,7 @@ Rules:
 - structure references and visual references must stay separate
 - default to 1-2 core flows
 - default to 3-5 core pages for deep work
+- checkpoint when structure becomes stable enough to continue in a new session
 
 ### 3. Visual Direction
 Goal:
@@ -117,6 +122,7 @@ Rules:
 - provide 2-3 candidate visual directions when needed
 - choose one before high-fidelity work
 - use text wireframes before image wireframes
+- record chosen direction and rejected directions in `state.json`
 
 ### 4. Image Iteration
 Goal:
@@ -131,6 +137,7 @@ Rules:
 - each round changes one main goal only
 - record what to keep, what to change, what remains unresolved
 - image-generated new features do not become official unless explicitly accepted
+- update page-level fidelity and key asset refs after each accepted round
 
 ### 5. Finalize
 Goal:
@@ -145,6 +152,8 @@ Rules:
 - final doc contains confirmed decisions only
 - process traces stay outside main doc unless needed
 - images first, text only for decisions, interactions, and constraints
+- write a fresh handoff summary before ending work
+- refresh `next_prompt_for_agent` before pausing or ending work
 
 ## Default Deliverables
 
@@ -166,6 +175,14 @@ assets/
 
 Only generate extra working files when project complexity justifies them.
 
+Optional recovery structure:
+
+```text
+checkpoints/
+  <timestamp>-<phase>-state.json
+  <timestamp>-<phase>-spec.md
+```
+
 ## Token Efficiency
 
 Prefer low-context operation by default.
@@ -176,6 +193,7 @@ Rules:
 - expand only core flows and core pages by default
 - keep process logs out of final output
 - load supporting reference files only for current phase
+- use `checkpoints/` only at meaningful boundaries, not every tiny edit
 
 Default scope:
 - 1-2 core flows
@@ -186,6 +204,9 @@ When continuing work:
 - read `state.json` first
 - avoid re-summarizing prior discussion unless needed
 - update existing structure instead of re-generating it
+- trust `resume_packet`, `current_focus`, and `handoff_notes` as first recovery source
+- compare latest checkpoint only if current state is stale or contradictory
+- if `next_prompt_for_agent` is valid, use it as the direct recovery instruction
 
 When writing:
 - prefer short fixed page sections
@@ -257,6 +278,8 @@ Do:
 - use mature patterns to reduce user effort
 - keep final output readable for designers and developers
 - preserve traceability through `state.json`
+- keep `state.json` fresh enough that a crashed or new session can resume without replaying chat
+- keep recovery quality high enough that a new session can continue within minutes from files only
 
 ## Escalation Rules
 
