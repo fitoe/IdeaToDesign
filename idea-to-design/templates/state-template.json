@@ -1,0 +1,54 @@
+{
+  "project_name": "",
+  "product_type": "",
+  "entry_mode": "start-from-idea",
+  "current_phase": "scope",
+  "approved_stage": "",
+  "target_users": [],
+  "current_scope": "",
+  "non_goals": [],
+  "success_criteria": [],
+  "core_flows": [
+    {
+      "id": "FLOW-01",
+      "name": "",
+      "goal": "",
+      "priority": "core",
+      "status": "draft",
+      "related_pages": []
+    }
+  ],
+  "pages": [
+    {
+      "id": "P-001",
+      "name": "",
+      "role": "core",
+      "related_flow": "FLOW-01",
+      "fidelity": "L1",
+      "status": "draft",
+      "asset_refs": [],
+      "notes": ""
+    }
+  ],
+  "design_direction": {
+    "status": "draft",
+    "keywords": [],
+    "principles": [],
+    "color_strategy": "",
+    "component_direction": "",
+    "avoid": []
+  },
+  "assets": {
+    "wireframes": [],
+    "mid_fi": [],
+    "hi_fi": [],
+    "rejected": []
+  },
+  "open_questions": [],
+  "decisions": [],
+  "out_of_scope": [],
+  "working_files": {
+    "design_spec": "Design-Spec.md",
+    "assets_dir": "assets"
+  }
+}
