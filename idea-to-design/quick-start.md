@@ -12,6 +12,11 @@ Use `idea-to-design` in one of three modes:
 - `assets/`
 - `state.json`
 
+## Language Rule
+
+- internal agent-facing content may stay in English
+- all human-facing outputs should default to Chinese
+
 ## Default Behavior
 
 - ask minimal questions

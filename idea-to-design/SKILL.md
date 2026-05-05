@@ -21,6 +21,7 @@ Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them
 - `state.json` is session continuity source of truth
+- all human-facing generated outputs must be in Chinese by default
 
 ## When to Use
 
@@ -163,6 +164,10 @@ Default deliverables:
 - `Design-Spec.md`
 - `assets/`
 - `state.json`
+
+Language rule:
+- internal notes, state fields, and agent-only helper text may stay in English
+- all final human-facing outputs, including design docs, page explanations, handoff text, and reviewable summaries, must be written in Chinese by default
 
 Recommended default asset structure:
 
