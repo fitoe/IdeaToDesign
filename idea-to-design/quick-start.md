@@ -16,6 +16,7 @@ Use `idea-to-design` in one of three modes:
 
 - internal agent-facing content may stay in English
 - all human-facing outputs should default to Chinese
+- all human-facing UI copy should use formal content, not explanatory placeholders
 
 ## Default Behavior
 

@@ -46,6 +46,8 @@ Constraints:
 - do not invent new features
 - do not over-style
 - focus on layout, hierarchy, and CTA placement
+- use formal Chinese product copy for any human-facing labels
+- do not use explanatory placeholders such as "这里是详情" or "这里展示数据"
 
 Output:
 - concise wireframe-style layout description
@@ -90,6 +92,7 @@ Style constraints:
 - no decorative visuals
 - focus on layout clarity and content hierarchy
 - clear spacing and information grouping
+- use formal Chinese UI copy where visible text is needed
 
 Do not:
 - invent additional features
@@ -146,6 +149,7 @@ Constraints:
 - moderate polish only
 - no extra product features
 - support readability and clear CTA hierarchy
+- use specific Chinese UI copy instead of placeholder explanations
 
 Do not:
 - radically change layout
@@ -199,12 +203,14 @@ Must preserve:
 - clear content hierarchy
 - obvious primary action
 - consistency with product-wide design direction
+- formal Chinese product copy across visible UI text
 
 Do not:
 - introduce new flows
 - introduce hidden product assumptions
 - overcomplicate the screen
 - prioritize beauty over usability
+- use explanatory placeholder labels in visible UI
 
 ---
 
@@ -237,6 +243,7 @@ Do not change:
 - page purpose
 - CTA position unless explicitly requested
 - established visual direction
+- approved formal UI copy unless refinement target is copy itself
 
 If tradeoff appears:
 - prioritize [clarity / hierarchy / density / CTA / readability]
@@ -306,6 +313,7 @@ Always include:
 - current fidelity target
 - visual constraints
 - explicit "do not" items
+- visible copy should be real Chinese product wording, not structural annotations
 
 Avoid:
 - vague adjectives only

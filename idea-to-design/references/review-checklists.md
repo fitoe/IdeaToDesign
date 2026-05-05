@@ -155,6 +155,24 @@ Reject if:
 
 ---
 
+## 8.5 Content Realism Review
+
+Use on all human-facing copy.
+
+Check:
+- Does title text read like real product copy?
+- Do buttons use real actions instead of placeholder descriptions?
+- Do cards, forms, and empty states avoid structural explanation text?
+- For core pages, does visible copy feel close to production-ready?
+- For supporting pages, is the wording still user-facing rather than annotation-like?
+
+Reject if:
+- copy says things like "这里是详情", "这里展示数据", "按钮文案", "用户信息区域"
+- labels describe structure instead of user meaning
+- text reads like designer notes rather than product copy
+
+---
+
 ## 9. Final Document Review
 
 Use before shipping `Design-Spec.md`.

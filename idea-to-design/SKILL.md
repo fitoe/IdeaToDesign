@@ -22,6 +22,7 @@ Core rule:
 - images express decisions, not replace them
 - `state.json` is session continuity source of truth
 - all human-facing generated outputs must be in Chinese by default
+- all human-facing UI copy should use formal product-ready wording, not explanatory placeholder labels
 
 ## When to Use
 
@@ -168,6 +169,10 @@ Default deliverables:
 Language rule:
 - internal notes, state fields, and agent-only helper text may stay in English
 - all final human-facing outputs, including design docs, page explanations, handoff text, and reviewable summaries, must be written in Chinese by default
+- all final human-facing UI copy should read like real product content
+- avoid labels such as "这里是详情", "这里展示数据", "按钮文案", "用户信息区域"
+- for core pages, prefer near-production wording
+- for supporting pages, wording may stay lighter but must not fall back to explanatory placeholders
 
 Recommended default asset structure:
 
