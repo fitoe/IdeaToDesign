@@ -17,6 +17,11 @@ Default outcome:
 - one machine-readable state file: `state.json`
 - optional recovery snapshots in `checkpoints/`
 
+Standalone rule:
+- this skill is standalone by default
+- `PlanToDelivery` may consume its outputs, but `PlanToDelivery` is not required to run this skill
+- outputs should stay useful for direct human review and for other orchestrators
+
 Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them

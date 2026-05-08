@@ -12,6 +12,11 @@ Use `idea-to-design` in one of three modes:
 - `assets/`
 - `state.json`
 
+## Standalone Rule
+
+- usable without `PlanToDelivery`
+- `PlanToDelivery` may consume the output, but is not required
+
 ## Language Rule
 
 - internal agent-facing content may stay in English
