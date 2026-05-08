@@ -15,6 +15,7 @@ Default outcome:
 - one formal design doc: `Design-Spec.md`
 - one design asset directory: `assets/`
 - one machine-readable state file: `state.json`
+- optional artifact and handoff manifests for orchestrated workflows
 - optional recovery snapshots in `checkpoints/`
 
 Standalone rule:
@@ -170,6 +171,19 @@ Default deliverables:
 - `Design-Spec.md`
 - `assets/`
 - `state.json`
+
+Optional orchestration deliverables:
+- `artifact-manifest.json`
+- `approval-records.json`
+- `handoff-manifest.json`
+
+Output gate:
+- product/design document exists
+- core flows and pages are defined or explicitly scoped
+- design direction status is clear
+- approved visual assets or equivalent visual source are recorded when implementation will follow
+- resumable state is current
+- any orchestrator-facing handoff manifest lists open questions and next action
 
 Language rule:
 - internal notes, state fields, and agent-only helper text may stay in English

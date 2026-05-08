@@ -16,6 +16,7 @@ Use `idea-to-design` in one of three modes:
 
 - usable without `PlanToDelivery`
 - `PlanToDelivery` may consume the output, but is not required
+- when orchestrated, optional manifests may summarize artifacts, approvals, and handoff status
 
 ## Language Rule
 
