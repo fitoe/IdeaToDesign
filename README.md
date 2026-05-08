@@ -163,6 +163,8 @@ idea-to-design/
 
 只有核心页面、首页、营销页或高保真页面才展开更完整的差异化方向和审美评审。
 
+核心页面会记录 `visual_dna`，包括已批准方向、禁用风格、材质语言、组件性格和下一轮 prompt 约束。后续页面应继承这些 DNA，但不能机械复制同一套构图。
+
 ---
 
 ## 推荐使用方式
@@ -202,6 +204,8 @@ It helps:
 
 - shape rough concepts into flows and pages
 - use mature design patterns as editable references
+- choose contextual creative directions instead of generic trendy output
+- review high-fidelity visuals with lightweight aesthetic gates
 - iterate visuals in controlled stages
 - consolidate outputs into a formal `Design-Spec.md`
 
@@ -210,6 +214,12 @@ Default outputs:
 - `Design-Spec.md`
 - `assets/`
 - `state.json`
+
+Recent additions:
+
+- `Creative Direction Summary` before high-fidelity core visuals
+- `Aesthetic Review` before accepting core-page assets
+- project-level `visual_dna` memory for continuity without repeated long prompts
 
 The goal is not to generate more documentation.  
 The goal is to generate a design package that is readable, reviewable, and practical for downstream implementation.
