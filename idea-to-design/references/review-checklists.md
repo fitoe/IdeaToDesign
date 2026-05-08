@@ -48,6 +48,10 @@ Use before image-heavy work.
 
 Check:
 - Is tone clear?
+- Is `Creative Direction Summary` present?
+- Is context fit explicit?
+- Is audience fit explicit?
+- Is there one memorable move for each core page or core visual direction?
 - Are visual principles concrete?
 - Is color strategy defined enough to guide consistency?
 - Is component direction defined enough to prevent drift?
@@ -58,6 +62,7 @@ Reject if:
 - brief is only adjectives
 - no component guidance exists
 - visual direction is still multiple unresolved directions
+- the direction defaults to generic SaaS, dashboard, or landing-page templates without a product reason
 
 ---
 
@@ -123,6 +128,8 @@ Use before finalizing.
 
 Check:
 - Is visual direction cohesive?
+- Does the page pass `Aesthetic Review` if it is a core page?
+- Is maturity at least `distinctive` for core pages?
 - Is readability preserved?
 - Is polish serving function?
 - Does design still match approved structure?
@@ -133,6 +140,26 @@ Reject if:
 - aesthetics hide usability issues
 - key interactions are unclear
 - polish introduced ambiguity
+- the page feels generic, outdated, or AI-template-like
+
+---
+
+## 7.5 Aesthetic Review
+
+Use before accepting core-page high-fidelity visuals.
+
+Check:
+- Does the design fit product context and audience taste?
+- Is there one clear memorable move?
+- Is visible content realistic and product-ready?
+- Does it avoid generic hero-plus-three-cards, empty dashboards, decorative blobs, cheap glass, and meaningless gradients?
+- Does it preserve visual DNA without copying the previous page composition mechanically?
+- Can it be implemented without disproportionate complexity?
+
+Reject if:
+- result is `generic` on the maturity ladder
+- novelty harms readability, trust, or task completion
+- traditional projects look old or rough instead of refined and credible
 
 ---
 

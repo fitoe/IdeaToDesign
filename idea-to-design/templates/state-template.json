@@ -62,7 +62,25 @@
     "principles": [],
     "color_strategy": "",
     "component_direction": "",
-    "avoid": []
+    "avoid": [],
+    "creative_direction_summary": {
+      "context_fit": "",
+      "audience_fit": "",
+      "freshness_level": "",
+      "visual_dna": [],
+      "memorable_move": "",
+      "anti_slop_risks": [],
+      "rejected_styles": [],
+      "next_prompt_constraints": []
+    },
+    "visual_dna": {
+      "approved_direction": "",
+      "material_language": "",
+      "component_personality": "",
+      "composition_rules": [],
+      "forbidden_styles": [],
+      "rejected_directions": []
+    }
   },
   "artifacts": {
     "design_spec": {

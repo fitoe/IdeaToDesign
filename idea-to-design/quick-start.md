@@ -29,6 +29,7 @@ Use `idea-to-design` in one of three modes:
 - ask minimal questions
 - draft assumptions early
 - use mature design patterns when user input is incomplete
+- use contextual creative direction to avoid generic or outdated visuals
 - focus on 1-2 core flows
 - focus on 3-5 core pages
 - keep final output light and readable
@@ -46,6 +47,8 @@ Use `idea-to-design` in one of three modes:
 - task flow before page
 - spec before image
 - text wireframe before image wireframe
+- Creative Direction Summary before high-fidelity core visuals
+- Aesthetic Review before accepting core-page high-fidelity assets
 - only core pages go high fidelity by default
 - final doc includes confirmed decisions only
 - process logs stay outside main doc unless needed

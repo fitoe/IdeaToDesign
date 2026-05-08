@@ -14,12 +14,14 @@
 - 只有一句模糊想法，希望快速整理为产品方案
 - 已有部分页面、流程或参考图，希望继续推进设计
 - 希望借助成熟设计模式减少补充细节的负担
+- 希望网页设计更有语境化创意，避免模板化、陈旧或 AI 味
 - 希望将零散设计过程收敛为正式的设计文档
 
 它强调：
 
 - 先任务流，后页面
 - 先结构化规格，后视觉出图
+- 先语境化创意方向，后高保真出图
 - 先核心页面，后扩展页面
 - 让最终交付保持轻量、清晰、可读
 
@@ -83,6 +85,8 @@
   结构化规格是事实来源，图片只是表达手段
 - `reference-driven-hypothesis`
   当用户输入不完整时，可参考成熟设计模式生成可编辑假设
+- `contextual-creative-direction`
+  视觉方向应符合行业、用户与信任要求；传统项目可以传统，但不能粗糙或模板化
 - `stage-gated-progression`
   通过阶段门禁控制推进，避免跳步失控
 - `selective-fidelity-escalation`
@@ -102,6 +106,7 @@
 `IdeaToDesign` 的处理方式是：
 
 - 使用成熟产品模式帮助补全结构假设
+- 使用轻量创意方向和审美评审降低同质化、过时感和 AI 模板感
 - 控制默认范围，只深做核心 flow 和核心页面
 - 将过程留档与正式交付分开
 - 用单一主文档承载最终设计说明，降低阅读成本
@@ -123,6 +128,8 @@ idea-to-design/
     stage-gates.md
     prompt-patterns.md
     review-checklists.md
+    creative-direction-system.md
+    aesthetic-review-system.md
 ```
 
 说明：
@@ -134,7 +141,27 @@ idea-to-design/
 - `templates/`
   正式设计文档与状态文件模板
 - `references/`
-  阶段门禁、出图 prompt 模式与评审清单
+  阶段门禁、出图 prompt 模式、创意方向与评审清单
+
+---
+
+## 创意方向与审美控制
+
+`IdeaToDesign` 不会默认把所有项目都做成最新潮流风格。它会先判断产品语境，再选择合适的新鲜度：
+
+- 传统信任型项目可以保持克制、正式、稳定
+- SaaS 和工具型产品强调清晰、效率和现代实用感
+- 消费、内容和品牌项目可以增加更强的视觉记忆点
+
+默认只做轻量检查：
+
+- `Context Fit`
+- `Audience Fit`
+- `One Memorable Move`
+- `Anti-AI-Slop Check`
+- `Real Content First`
+
+只有核心页面、首页、营销页或高保真页面才展开更完整的差异化方向和审美评审。
 
 ---
 
@@ -196,6 +223,7 @@ Current version is an initial public release focused on:
 - usability
 - controlled scope
 - token efficiency
+- contextual creative direction
 - designer-friendly final output
 
 Future refinement may include:

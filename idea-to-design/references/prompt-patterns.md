@@ -187,6 +187,9 @@ Primary CTA:
 Visual brief:
 - tone: [keywords]
 - first impression: [feeling]
+- context fit: [classic trusted / modern practical / warm lifestyle / bold editorial / experimental]
+- one memorable move: [single distinctive design idea]
+- freshness budget: [1-2 visual moves only]
 - visual principles:
   - [Principle 1]
   - [Principle 2]
@@ -204,6 +207,7 @@ Must preserve:
 - obvious primary action
 - consistency with product-wide design direction
 - formal Chinese product copy across visible UI text
+- project visual DNA and audience fit
 
 Do not:
 - introduce new flows
@@ -211,6 +215,8 @@ Do not:
 - overcomplicate the screen
 - prioritize beauty over usability
 - use explanatory placeholder labels in visible UI
+- fall back to generic hero-plus-three-cards templates
+- use decorative gradients, glass, blobs, or 3D objects without product purpose
 
 ---
 
@@ -277,6 +283,13 @@ For each direction, vary:
 - emphasis style
 - color behavior
 - component feel
+- composition
+- material language
+- typography rhythm
+
+Variation rule:
+- each direction must differ in at least 2-3 of composition, material, density, color strategy, typography rhythm, component shape, or visual hook
+- do not create three versions that only change colors or adjectives
 
 Keep constant:
 - overall page purpose
@@ -312,6 +325,8 @@ Always include:
 - primary CTA
 - current fidelity target
 - visual constraints
+- context fit and audience fit
+- one memorable move for core pages
 - explicit "do not" items
 - visible copy should be real Chinese product wording, not structural annotations
 

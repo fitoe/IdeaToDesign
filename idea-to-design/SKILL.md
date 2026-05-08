@@ -69,6 +69,9 @@ Define core user tasks first. Do not start from disconnected pages.
 ### reference-driven-hypothesis
 When user input is incomplete, infer likely flows, pages, and visual directions from mature design patterns. Present them as editable hypotheses, not fixed truth.
 
+### contextual-creative-direction
+Visuals should fit product context, audience taste, and trust level. Do not force every project to look trendy, but do not accept generic AI-template output for core pages.
+
 ### stage-gated-progression
 Do not jump forward without enough structure.
 
@@ -123,11 +126,14 @@ Goal:
 
 Output:
 - design direction
+- `Creative Direction Summary`
 - key visual principles
 - text wireframes for core pages
 
 Rules:
 - provide 2-3 candidate visual directions when needed
+- use `references/creative-direction-system.md` when visual direction feels generic, outdated, or high-impact
+- default to a lightweight creative check: context fit, audience fit, one memorable move, anti-slop risk, and real content first
 - choose one before high-fidelity work
 - use text wireframes before image wireframes
 - record chosen direction and rejected directions in `state.json`
@@ -144,6 +150,8 @@ Output:
 Rules:
 - each round changes one main goal only
 - record what to keep, what to change, what remains unresolved
+- use `references/aesthetic-review-system.md` before accepting core-page high-fidelity visuals
+- core pages should pass `Aesthetic Review` before final reference acceptance
 - image-generated new features do not become official unless explicitly accepted
 - update page-level fidelity and key asset refs after each accepted round
 

@@ -50,6 +50,15 @@
 - Principle 2:
 - Principle 3:
 
+### Creative Direction Summary
+- Context fit:
+- Audience fit:
+- Freshness level:
+- Visual DNA:
+- One memorable move:
+- Anti-slop risks:
+- Rejected styles:
+
 ### Color Strategy
 - Primary color direction:
 - Secondary color direction:
