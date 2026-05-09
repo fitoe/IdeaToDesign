@@ -12,9 +12,8 @@ Turn vague product ideas into a formal design document and staged design assets.
 This skill is not a general-purpose product consultant. It is a design progression system.
 
 Default outcome:
-- one formal design doc: `Design-Spec.md`
-- one design asset directory: `assets/`
-- one machine-readable state file: `state.json`
+- Level 1 lightweight design package: `Design-Spec.md`, `assets/`, `state.json`
+- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, parity checklist, and a checker-passing `implementation_gate`
 - optional artifact and handoff manifests for orchestrated workflows
 - optional recovery snapshots in `checkpoints/`
 
@@ -26,7 +25,9 @@ Standalone rule:
 Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them
-- `state.json` is session continuity source of truth
+- approved mockups are visual sources, not implementation-ready specs by themselves
+- formal UI work must be tokenized and page-briefed before coding
+- `state.json` is session continuity and gate status source of truth
 - all human-facing generated outputs must be in Chinese by default
 - all human-facing UI copy should use formal product-ready wording, not explanatory placeholder labels
 
@@ -83,7 +84,7 @@ Final delivery must be easy to read. Process logs stay in background unless need
 
 ## Workflow
 
-Follow five internal phases.
+Follow five internal phases, plus Level 3 gates when implementation will follow.
 
 ### 1. Scope
 Goal:
@@ -157,39 +158,74 @@ Rules:
 
 ### 5. Finalize
 Goal:
-- produce a clean formal design document
+- produce a clean formal design document and, when needed, an implementation-ready handoff pack
 
-Output:
+Level 1 output:
 - `Design-Spec.md`
 - organized design assets
 - updated `state.json`
 
+Level 3 output for formal UI implementation:
+- Level 1 output
+- `DESIGN.md` and `tokens.json` generated or shaped with the `design-md` rules
+- `visual-source-contract.json`
+- compact page briefs under `page-style-briefs/`
+- `implementation-parity-checklist.md`
+- checker result recorded in `state.json`
+
 Rules:
 - final doc contains confirmed decisions only
 - process traces stay outside main doc unless needed
-- images first, text only for decisions, interactions, and constraints
+- images first, text only for decisions, interactions, constraints, and implementation-critical style rules
+- high-fidelity mockup approval does not open the implementation gate by itself
 - write a fresh handoff summary before ending work
 - refresh `next_prompt_for_agent` before pausing or ending work
 
-## Default Deliverables
+## Deliverable Levels
 
-Always prefer minimal output.
+Always prefer the lightest package that can safely support the next step.
 
-Default deliverables:
+### Level 1: concept/design package
+Use for early ideas, internal exploration, and non-UI or non-implementation work.
+
+Required:
 - `Design-Spec.md`
 - `assets/`
 - `state.json`
+
+### Level 2: visual source package
+Use when visual mockups are reviewed but implementation is not yet starting.
+
+Required:
+- Level 1 output
+- approved asset refs in `state.json`
+- short visual source notes inside `Design-Spec.md` or `visual-source-contract.json`
+
+### Level 3: implementation-ready UI package
+Use automatically when formal UI mockups are approved and code implementation will follow.
+
+Required:
+- Level 2 output
+- `DESIGN.md`
+- `tokens.json`
+- `visual-source-contract.json`
+- `page-style-briefs/<page-id>.md` for each core implemented page
+- `implementation-parity-checklist.md`
+- `scripts/check-design-handoff.py` passes
+- `state.json.implementation_gate.status = "open"`
 
 Optional orchestration deliverables:
 - `artifact-manifest.json`
 - `approval-records.json`
 - `handoff-manifest.json`
+- `mockup-code-map.json` and `design-debt.json` only for long-lived implementation projects
 
 Output gate:
 - product/design document exists
 - core flows and pages are defined or explicitly scoped
 - design direction status is clear
 - approved visual assets or equivalent visual source are recorded when implementation will follow
+- Level 3 gate is open before coding starts
 - resumable state is current
 - any orchestrator-facing handoff manifest lists open questions and next action
 
@@ -219,6 +255,28 @@ checkpoints/
   <timestamp>-<phase>-state.json
   <timestamp>-<phase>-spec.md
 ```
+
+## Built-in Gate System
+
+`design-process-gates` is absorbed into this skill. Do not treat gate control as an optional companion skill. `idea-to-design` owns the full path from idea to implementation-ready design handoff.
+
+### Visual source gate
+Track visual states separately: direction drafted, direction selected, wireframes drafted, mockups generated, local files verified, user reviewed, user accepted. Do not collapse these into a vague `visual_complete` status.
+
+### Design token gate
+When approved mockups will be implemented, generate or maintain `DESIGN.md` and `tokens.json`. Use `design-md` as the helper for syntax, linting, and exports; `idea-to-design` remains the owner of deciding that tokenization is required.
+
+### Page brief gate
+Every core implemented page needs a compact page brief. Keep each brief short: visual source, required regions, must-preserve rules, forbidden drift, and first-screen acceptance criteria. Avoid repeating global tokens in every brief.
+
+### Implementation gate
+`implementation_gate` stays `blocked` until Level 3 required files exist and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
+
+### Parity gate
+For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
+
+### Change request rule
+Development agents must not silently redesign approved mockups. If the design is impractical, create a design change request or design debt item instead of improvising the UI in code.
 
 ## Token Efficiency
 
@@ -250,6 +308,7 @@ When writing:
 - avoid repeating design brief content on every page
 - collapse repeated patterns instead of restating them
 - move archival detail to optional working files only
+- for Level 3, keep required files compact and link them instead of duplicating long visual descriptions
 
 ## Design-Spec Structure
 
@@ -343,4 +402,5 @@ This skill succeeds when:
 - visuals are produced in controlled stages
 - final design document stays readable and not bloated
 - designers can review it quickly
-- developers can implement from it with minimal confusion
+- Level 3 UI handoff has tokens, page briefs, visual contracts, and a passing checker
+- developers can implement from it with minimal confusion and without silently drifting from approved mockups

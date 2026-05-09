@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.1",
+  "schema_version": "1.2",
   "skill_name": "idea-to-design",
   "project_name": "",
   "project_id": "",
@@ -19,7 +19,7 @@
     "summary": "",
     "last_completed_step": "",
     "next_recommended_step": "",
-    "next_prompt_for_agent": "Read state.json, Design-Spec.md, and latest checkpoint if needed. Continue from the recorded current_phase and current_focus. Do not redo accepted work. Complete only the next_recommended_step, then update state.json.",
+    "next_prompt_for_agent": "Read state.json first. If delivery_level is level-3, also read Design-Spec.md, DESIGN.md, tokens.json, visual-source-contract.json, relevant page-style-briefs, and implementation-parity-checklist.md. Do not start coding unless implementation_gate.status is open or a user waiver is recorded.",
     "blocking_questions": [],
     "warnings": []
   },
@@ -116,8 +116,43 @@
   "out_of_scope": [],
   "handoff_notes": {
     "for_next_session": "",
-    "must_read_files": [],
+    "must_read_files": [
+      "state.json",
+      "Design-Spec.md",
+      "DESIGN.md when delivery_level is level-3",
+      "tokens.json when delivery_level is level-3",
+      "visual-source-contract.json when delivery_level is level-3",
+      "page-style-briefs/<page-id>.md when delivery_level is level-3",
+      "implementation-parity-checklist.md when delivery_level is level-3"
+    ],
     "do_not_redo": [],
     "quality_bar": ""
+  },
+  "delivery_level": "level-1",
+  "visual_sources": {
+    "status": "draft",
+    "approved_mockups": []
+  },
+  "design_tokens": {
+    "status": "not_required",
+    "files": []
+  },
+  "page_style_briefs": {
+    "status": "not_required",
+    "coverage": "",
+    "files": []
+  },
+  "implementation_handoff": {
+    "status": "not_required",
+    "files": []
+  },
+  "implementation_gate": {
+    "status": "blocked",
+    "blocked_reasons": [
+      "level_3_not_requested_or_not_ready"
+    ],
+    "checker": "scripts/check-design-handoff.py",
+    "last_check": "",
+    "waivers": []
   }
 }

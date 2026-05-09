@@ -153,3 +153,44 @@ Use when:
 - many visual branches were explored
 - long-running project needs history
 - prompts and rejected options must be preserved
+
+
+---
+
+## Gate 7: Level 3 Implementation Handoff
+
+Use when formal UI mockups are approved and implementation will follow. This absorbs the former `design-process-gates` responsibility into `idea-to-design`.
+
+Must have:
+- approved mockup refs in `state.json`
+- `DESIGN.md` and `tokens.json`
+- `visual-source-contract.json` with at least one approved mockup
+- compact `page-style-briefs/<page-id>.md` for each core page that will be implemented
+- `implementation-parity-checklist.md`
+- `scripts/check-design-handoff.py` passes
+- `state.json.implementation_gate.status = "open"`
+
+Do not proceed to implementation if:
+- mockups are approved but tokens are missing
+- page briefs are missing for core pages
+- implementation plan does not reference design tokens and visual source IDs
+- `implementation_gate.status` is blocked and there is no explicit user waiver
+
+If blocked:
+- generate the smallest missing Level 3 artifact instead of expanding all docs
+- keep page briefs short and link to global tokens
+- record waivers explicitly if the user chooses to bypass a gate
+
+---
+
+## Implementation Parity Gate
+
+After coding starts, each UI checkpoint must compare the implemented page against the approved mockup and page brief. Functional tests/builds alone are insufficient.
+
+Minimum parity check:
+- exact mockup/page brief identified
+- mobile viewport screenshot captured
+- header/navigation, first-screen density, card anatomy, and button hierarchy compared
+- drift recorded as fixed, accepted deviation, user decision, or design debt
+
+Development agents must not silently redesign approved mockups. If the design is impractical, create a design change request or design debt item.

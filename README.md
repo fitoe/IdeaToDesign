@@ -23,7 +23,9 @@
 - 先结构化规格，后视觉出图
 - 先语境化创意方向，后高保真出图
 - 先核心页面，后扩展页面
-- 让最终交付保持轻量、清晰、可读
+- 默认轻量交付，正式 UI 实现才升级到 Level 3
+- Level 3 必须具备 token、页面样式描述、视觉源契约和 checker 门禁
+- 让最终交付保持轻量、清晰、可读、可实现
 
 ---
 
@@ -164,6 +166,23 @@ idea-to-design/
 只有核心页面、首页、营销页或高保真页面才展开更完整的差异化方向和审美评审。
 
 核心页面会记录 `visual_dna`，包括已批准方向、禁用风格、材质语言、组件性格和下一轮 prompt 约束。后续页面应继承这些 DNA，但不能机械复制同一套构图。
+
+---
+
+## Level 3：正式 UI 实现交付
+
+当高保真 UI 样稿已确认且后续要进入代码实现时，`IdeaToDesign` 会从轻量设计包升级为 Level 3 交付包。
+
+Level 3 额外要求：
+
+- `DESIGN.md` 与 `tokens.json`
+- `visual-source-contract.json`
+- `page-style-briefs/`
+- `implementation-parity-checklist.md`
+- `scripts/check-design-handoff.py` 通过
+- `state.json` 中 `implementation_gate.status = open`
+
+设计门禁已内置在 `IdeaToDesign` 中；不再需要单独依赖 `design-process-gates`。`design-md` 仍作为 DESIGN.md / token 语法与导出辅助。
 
 ---
 

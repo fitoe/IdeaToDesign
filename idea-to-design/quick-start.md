@@ -85,3 +85,8 @@ Before ending or pausing a session, update:
 ## Main Goal
 
 Turn vague ideas into a formal design document and staged design assets without making user specify everything manually.
+
+
+## Level 3 快速规则
+
+正式 UI 样稿已确认且要进入代码实现时，先补齐：`DESIGN.md`、`tokens.json`、`visual-source-contract.json`、`page-style-briefs/`、`implementation-parity-checklist.md`，并运行 `python scripts/check-design-handoff.py`。通过后才能把 `implementation_gate.status` 设为 `open`。
