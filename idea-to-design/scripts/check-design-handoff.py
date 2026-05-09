@@ -52,6 +52,9 @@ def main() -> int:
             blockers.append("design_tokens.status is not ready")
         if state.get("page_style_briefs", {}).get("status") != "ready":
             blockers.append("page_style_briefs.status is not ready")
+        dtc = state.get("design_to_code_inputs")
+        if dtc is not None and dtc.get("status") != "ready":
+            blockers.append("design_to_code_inputs.status is not ready")
 
     contract = load_json(ROOT / "visual-source-contract.json")
     if isinstance(contract, dict) and "__error__" in contract:
@@ -69,6 +72,20 @@ def main() -> int:
 
     if not (ROOT / "mockup-code-map.json").exists():
         warnings.append("optional mockup-code-map.json is missing")
+
+    dtc_dir = ROOT / "design-to-code-inputs"
+    prebrief_dir = ROOT / "pre-implementation-briefs"
+    if (ROOT / "state.json").exists() and isinstance(state, dict):
+        dtc = state.get("design_to_code_inputs")
+        if dtc is not None:
+            manifest = ROOT / dtc.get("manifest", "design-to-code-inputs/manifest.json")
+            if not manifest.exists():
+                blockers.append(f"missing design-to-code manifest: {manifest.relative_to(ROOT)}")
+            if not dtc_dir.exists():
+                blockers.append("missing design-to-code-inputs/ directory")
+            if not prebrief_dir.exists() or not list(prebrief_dir.glob("*.md")):
+                blockers.append("missing pre-implementation-briefs/*.md for design-to-code")
+
     if not (ROOT / "design-debt.json").exists():
         warnings.append("optional design-debt.json is missing")
 

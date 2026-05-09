@@ -12,6 +12,11 @@ visual-source-contract.json
 page-style-briefs/
   <page-id>.md
 implementation-parity-checklist.md
+design-to-code-inputs/
+  manifest.json
+  <mockup-id>-<page-id>.png
+pre-implementation-briefs/
+  <page-id>.md
 state.json
 scripts/check-design-handoff.py
 ```
@@ -117,6 +122,27 @@ For each UI checkpoint:
 }
 ```
 
-## 6. State Rule
+## 6. Design-to-code Inputs
 
-`implementation_gate.status` may be `open` only when Level 3 required files exist and `scripts/check-design-handoff.py` passes. If the user waives the gate, record the waiver explicitly in `implementation_gate.waivers`.
+`idea-to-design` prepares these; `design-to-code` consumes them for implementation.
+
+```json
+{
+  "items": [
+    {
+      "page_id": "page-id",
+      "mockup_id": "mockup-001",
+      "source": "assets/hi-fi/mockup-board.png",
+      "crop": "design-to-code-inputs/mockup-001-page-id.png",
+      "crop_box": [0, 0, 390, 844],
+      "size": [390, 844]
+    }
+  ]
+}
+```
+
+Each implemented page also needs `pre-implementation-briefs/<page-id>.md` using the `design-to-code` Pre-Implementation Brief shape.
+
+## 7. State Rule
+
+`implementation_gate.status` may be `open` only when Level 3 required files exist, design-to-code inputs exist for target pages, and `scripts/check-design-handoff.py` passes. If the user waives the gate, record the waiver explicitly in `implementation_gate.waivers`.

@@ -13,7 +13,7 @@ This skill is not a general-purpose product consultant. It is a design progressi
 
 Default outcome:
 - Level 1 lightweight design package: `Design-Spec.md`, `assets/`, `state.json`
-- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, parity checklist, and a checker-passing `implementation_gate`
+- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, design-to-code inputs, parity checklist, and a checker-passing `implementation_gate`
 - optional artifact and handoff manifests for orchestrated workflows
 - optional recovery snapshots in `checkpoints/`
 
@@ -26,7 +26,8 @@ Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them
 - approved mockups are visual sources, not implementation-ready specs by themselves
-- formal UI work must be tokenized and page-briefed before coding
+- formal UI work must be tokenized, page-briefed, and converted into `design-to-code` consumable inputs before coding
+- `design-to-code` owns the design-to-code execution step; `idea-to-design` owns the preparation and gate
 - `state.json` is session continuity and gate status source of truth
 - all human-facing generated outputs must be in Chinese by default
 - all human-facing UI copy should use formal product-ready wording, not explanatory placeholder labels
@@ -170,6 +171,7 @@ Level 3 output for formal UI implementation:
 - `DESIGN.md` and `tokens.json` generated or shaped with the `design-md` rules
 - `visual-source-contract.json`
 - compact page briefs under `page-style-briefs/`
+- segmented/cropped design inputs and `design-to-code` Pre-Implementation Briefs under `design-to-code-inputs/` and `pre-implementation-briefs/`
 - `implementation-parity-checklist.md`
 - checker result recorded in `state.json`
 
@@ -210,6 +212,8 @@ Required:
 - `tokens.json`
 - `visual-source-contract.json`
 - `page-style-briefs/<page-id>.md` for each core implemented page
+- `design-to-code-inputs/manifest.json` plus per-page persisted crops/sections suitable for the `design-to-code` skill
+- `pre-implementation-briefs/<page-id>.md` in the `design-to-code` required brief shape before code generation
 - `implementation-parity-checklist.md`
 - `scripts/check-design-handoff.py` passes
 - `state.json.implementation_gate.status = "open"`
@@ -269,8 +273,11 @@ When approved mockups will be implemented, generate or maintain `DESIGN.md` and 
 ### Page brief gate
 Every core implemented page needs a compact page brief. Keep each brief short: visual source, required regions, must-preserve rules, forbidden drift, and first-screen acceptance criteria. Avoid repeating global tokens in every brief.
 
+### Design-to-code input gate
+When Level 3 implementation will produce code from images, prepare inputs for the `design-to-code` skill before coding: persisted per-page crops/section images, `design-to-code-inputs/manifest.json`, and `pre-implementation-briefs/<page-id>.md` in the `design-to-code` brief shape. `idea-to-design` prepares and gates these inputs; `design-to-code` performs the actual design-to-code execution and verification.
+
 ### Implementation gate
-`implementation_gate` stays `blocked` until Level 3 required files exist and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
+`implementation_gate` stays `blocked` until Level 3 required files exist, design-to-code inputs exist for target core pages, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
