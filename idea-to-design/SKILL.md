@@ -13,7 +13,7 @@ This skill is not a general-purpose product consultant. It is a design progressi
 
 Default outcome:
 - Level 1 lightweight design package: `Design-Spec.md`, `assets/`, `state.json`
-- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, design-to-code inputs, parity checklist, and a checker-passing `implementation_gate`
+- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, page-level visual contracts, design-to-code inputs, parity checklist, and a checker-passing `implementation_gate`
 - optional artifact and handoff manifests for orchestrated workflows
 - optional recovery snapshots in `checkpoints/`
 
@@ -175,6 +175,7 @@ Level 3 output for formal UI implementation:
 - Level 1 output
 - `DESIGN.md` and `tokens.json` generated or shaped with the `design-md` rules
 - `visual-source-contract.json`
+- machine-readable page contracts under `visual-contracts/`
 - compact page briefs under `page-style-briefs/`
 - segmented/cropped design inputs and `design-to-code` Pre-Implementation Briefs under `design-to-code-inputs/` and `pre-implementation-briefs/`
 - `implementation-parity-checklist.md`
@@ -219,6 +220,7 @@ Required:
 - `DESIGN.md`
 - `tokens.json`
 - `visual-source-contract.json`
+- `visual-contracts/<page-id>.json` for each binding implemented page, including source image, target file, layout order, forbidden drift, drift budget, project constraints, and accepted deviations
 - `page-style-briefs/<page-id>.md` for each core implemented page
 - `design-to-code-inputs/manifest.json` plus per-page persisted crops/sections suitable for the `design-to-code` skill
 - `pre-implementation-briefs/<page-id>.md` in the `design-to-code` required brief shape before code generation
@@ -279,6 +281,19 @@ Before image generation, define the page/state list and create a visual coverage
 
 Approval rule: if the user reviews a board and says it is approved, that board becomes a binding visual source for the pages it covers. Record the approval, local asset path, covered page IDs, accepted deviations if any, and whether the user explicitly allowed directional-only implementation. If the user did not allow directional-only implementation, treat visual parity as required.
 
+A visual-source approval does not approve code implementation. Keep `implementation_gate.status = "blocked"` until visual contracts, design-to-code inputs, parity/waiver records, and checker pass. Ask or record a separate user instruction before starting code.
+
+Prefer single-page crops for implementation. Multi-page boards are acceptable for review, but Level 3 design-to-code inputs should include per-page crops or explain why the full board is the only available source.
+
+### Visual contract gate
+For every binding implemented page, create `visual-contracts/<page-id>.json` before code generation. It must include: `visual_source_mode`, `source_image`, `target_file`, `reference_width`, `layout_order`, `visual_anchors`, `forbidden_drift`, `drift_budget`, `project_constraints`, `accepted_deviations`, and `parity_verification`.
+
+Use page briefs for human-readable intent and visual contracts for machine-checkable implementation constraints. Do not put all binding rules only in prose.
+
+If the user waives screenshot comparison, record it explicitly in `parity_verification` with `required`, `waived_by_user`, and `waiver_reason`. A waiver disables screenshot comparison only; it does not permit layout drift.
+
+Record that old mockups, old handoffs, current implementation screenshots, and pre-binding implementation commits are not visual baselines. Approved visual sources and accepted deviations outrank existing code.
+
 ### Design token gate
 When approved mockups will be implemented, generate or maintain `DESIGN.md` and `tokens.json`. Use `design-md` as the helper for syntax, linting, and exports; `idea-to-design` remains the owner of deciding that tokenization is required.
 
@@ -293,7 +308,7 @@ When Level 3 implementation will produce code from images, prepare inputs for th
 The pre-implementation brief must say whether the visual source is `binding` or `directional`. Default to `binding` for user-approved UI mockups. If a route/component constraint requires visible deviation from the approved mockup, record it as an accepted deviation, design change request, or design debt before coding.
 
 ### Implementation gate
-`implementation_gate` stays `blocked` until Level 3 required files exist, design-to-code inputs exist for target core pages, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
+`implementation_gate` stays `blocked` until Level 3 required files exist, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
