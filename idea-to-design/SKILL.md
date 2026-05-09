@@ -25,7 +25,8 @@ Standalone rule:
 Core rule:
 - structured spec is source of truth
 - images express decisions, not replace them
-- approved mockups are visual sources, not implementation-ready specs by themselves
+- approved mockups are binding visual sources for UI implementation unless the user explicitly says they are only directional
+- do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, and first-screen composition must be captured as implementation constraints
 - formal UI work must be tokenized, page-briefed, and converted into `design-to-code` consumable inputs before coding
 - `design-to-code` owns the design-to-code execution step; `idea-to-design` owns the preparation and gate
 - `state.json` is session continuity and gate status source of truth
@@ -150,12 +151,16 @@ Output:
 - high-fidelity visuals for selected core pages
 
 Rules:
+- before generating high-fidelity boards, create a visual coverage matrix listing every required page/state as `missing`, `generated`, `reviewed`, `approved`, `deferred`, or `blocked`
+- group related pages/states into multi-page boards when possible; do not generate one image per small state by default
 - each round changes one main goal only
 - record what to keep, what to change, what remains unresolved
 - use `references/aesthetic-review-system.md` before accepting core-page high-fidelity visuals
 - core pages should pass `Aesthetic Review` before final reference acceptance
 - image-generated new features do not become official unless explicitly accepted
 - update page-level fidelity and key asset refs after each accepted round
+- in CLI/WSL review, if the user asks to inspect boards visually, open verified local board files with `eog <path...>` and stop at the approval gate until they explicitly confirm
+- after generated boards are reviewed, do not mark them approved and do not prepare implementation handoff until the user explicitly approves the visual sources
 
 ### 5. Finalize
 Goal:
@@ -180,6 +185,8 @@ Rules:
 - process traces stay outside main doc unless needed
 - images first, text only for decisions, interactions, constraints, and implementation-critical style rules
 - high-fidelity mockup approval does not open the implementation gate by itself
+- a user-approved mockup opens only the visual-source gate; implementation gate opens only after the approved image has been converted into page-level visual contracts and `design-to-code` inputs
+- never write `visual sources are directional` unless the user explicitly chose directional-only implementation; default is binding visual parity for approved UI mockups
 - write a fresh handoff summary before ending work
 - refresh `next_prompt_for_agent` before pausing or ending work
 
@@ -202,6 +209,7 @@ Required:
 - Level 1 output
 - approved asset refs in `state.json`
 - short visual source notes inside `Design-Spec.md` or `visual-source-contract.json`
+- visual coverage matrix showing every required page/state as approved or explicitly deferred
 
 ### Level 3: implementation-ready UI package
 Use automatically when formal UI mockups are approved and code implementation will follow.
@@ -267,20 +275,30 @@ checkpoints/
 ### Visual source gate
 Track visual states separately: direction drafted, direction selected, wireframes drafted, mockups generated, local files verified, user reviewed, user accepted. Do not collapse these into a vague `visual_complete` status.
 
+Before image generation, define the page/state list and create a visual coverage matrix. Keep working inside the visual gate while any required page/state is missing, generated but unreviewed, reviewed but unapproved, or not explicitly deferred by the user.
+
+Approval rule: if the user reviews a board and says it is approved, that board becomes a binding visual source for the pages it covers. Record the approval, local asset path, covered page IDs, accepted deviations if any, and whether the user explicitly allowed directional-only implementation. If the user did not allow directional-only implementation, treat visual parity as required.
+
 ### Design token gate
 When approved mockups will be implemented, generate or maintain `DESIGN.md` and `tokens.json`. Use `design-md` as the helper for syntax, linting, and exports; `idea-to-design` remains the owner of deciding that tokenization is required.
 
 ### Page brief gate
 Every core implemented page needs a compact page brief. Keep each brief short: visual source, required regions, must-preserve rules, forbidden drift, and first-screen acceptance criteria. Avoid repeating global tokens in every brief.
 
+For approved mockups, page briefs must include visual-parity constraints, not just region names: screen order, dominant card shapes, layout pattern, first-screen composition, navigation count/labels, major color blocks, density, and button hierarchy. If these are absent, the brief is not implementation-ready.
+
 ### Design-to-code input gate
 When Level 3 implementation will produce code from images, prepare inputs for the `design-to-code` skill before coding: persisted per-page crops/section images, `design-to-code-inputs/manifest.json`, and `pre-implementation-briefs/<page-id>.md` in the `design-to-code` brief shape. `idea-to-design` prepares and gates these inputs; `design-to-code` performs the actual design-to-code execution and verification.
+
+The pre-implementation brief must say whether the visual source is `binding` or `directional`. Default to `binding` for user-approved UI mockups. If a route/component constraint requires visible deviation from the approved mockup, record it as an accepted deviation, design change request, or design debt before coding.
 
 ### Implementation gate
 `implementation_gate` stays `blocked` until Level 3 required files exist, design-to-code inputs exist for target core pages, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
+
+Do not accept a checkpoint that only says required regions exist. It must compare the implementation screenshot against the approved visual source on at least: layout order, major proportions, card anatomy, color blocks, navigation labels/count, first-screen visible content, spacing rhythm, and primary/secondary action hierarchy.
 
 ### Change request rule
 Development agents must not silently redesign approved mockups. If the design is impractical, create a design change request or design debt item instead of improvising the UI in code.
