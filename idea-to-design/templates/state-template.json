@@ -1,5 +1,5 @@
 {
-  "schema_version": "1.2",
+  "schema_version": "1.3",
   "skill_name": "idea-to-design",
   "project_name": "",
   "project_id": "",
@@ -19,7 +19,7 @@
     "summary": "",
     "last_completed_step": "",
     "next_recommended_step": "",
-    "next_prompt_for_agent": "Read state.json first. If delivery_level is level-3, also read Design-Spec.md, DESIGN.md, tokens.json, visual-source-contract.json, relevant page-style-briefs, and implementation-parity-checklist.md. Do not start coding unless implementation_gate.status is open or a user waiver is recorded.",
+    "next_prompt_for_agent": "Read state.json first. If delivery_level is level-3, read implementation-blueprint.json next, then only the files listed for the current pass. Do not start coding unless implementation_gate.status is open or a user waiver is recorded.",
     "blocking_questions": [],
     "warnings": []
   },
@@ -119,6 +119,10 @@
     "must_read_files": [
       "state.json",
       "Design-Spec.md",
+      "debt-ledger.json when delivery_level is level-3",
+      "component-blueprint.json when delivery_level is level-3",
+      "page-matrix.json when delivery_level is level-3",
+      "implementation-blueprint.json when delivery_level is level-3",
       "DESIGN.md when delivery_level is level-3",
       "tokens.json when delivery_level is level-3",
       "visual-source-contract.json when delivery_level is level-3",
@@ -154,5 +158,27 @@
     "checker": "scripts/check-design-handoff.py",
     "last_check": "",
     "waivers": []
+  },
+  "implementation_blueprint": {
+    "status": "not_required",
+    "files": [
+      "implementation-blueprint.json",
+      "page-matrix.json",
+      "component-blueprint.json",
+      "debt-ledger.json"
+    ],
+    "current_pass": "",
+    "token_budget_rule": "read implementation-blueprint.json first; then only current-pass file refs; do not load full design docs/images by default"
+  },
+  "page_maturity": {
+    "levels": [
+      "L0 route-ready",
+      "L1 skeleton-ready",
+      "L2 content-ready",
+      "L3 system-styled",
+      "L4 core-fidelity",
+      "L5 functional-ready"
+    ],
+    "matrix": "page-matrix.json when delivery_level is level-3"
   }
 }

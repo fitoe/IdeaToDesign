@@ -13,7 +13,7 @@ This skill is not a general-purpose product consultant. It is a design progressi
 
 Default outcome:
 - Level 1 lightweight design package: `Design-Spec.md`, `assets/`, `state.json`
-- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, page-level visual contracts, design-to-code inputs, parity checklist, and a checker-passing `implementation_gate`
+- Level 3 implementation-ready UI package when formal UI mockups will be coded: design tokens, visual source contract, page briefs, page-level visual contracts, Implementation Blueprint, design-to-code inputs, parity checklist, and a checker-passing `implementation_gate`
 - optional artifact and handoff manifests for orchestrated workflows
 - optional recovery snapshots in `checkpoints/`
 
@@ -27,7 +27,8 @@ Core rule:
 - images express decisions, not replace them
 - approved mockups are binding visual sources for UI implementation unless the user explicitly says they are only directional
 - do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, and first-screen composition must be captured as implementation constraints
-- formal UI work must be tokenized, page-briefed, and converted into `design-to-code` consumable inputs before coding
+- formal UI work must be tokenized, page-briefed, converted into compact implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
+- `idea-to-design` should front-load rules that would otherwise cause implementation-time analysis: routes, page priority, global style tokens, component tiers, mock/content strategy, asset fallback levels, accepted engineering deviations, maturity targets, and verification level
 - `design-to-code` owns the design-to-code execution step; `idea-to-design` owns the preparation and gate
 - `state.json` is session continuity and gate status source of truth
 - all human-facing generated outputs must be in Chinese by default
@@ -177,6 +178,7 @@ Level 3 output for formal UI implementation:
 - `visual-source-contract.json`
 - machine-readable page contracts under `visual-contracts/`
 - compact page briefs under `page-style-briefs/`
+- compact default execution artifacts: `implementation-blueprint.json`, `page-matrix.json`, `component-blueprint.json`, and `debt-ledger.json`
 - segmented/cropped design inputs and `design-to-code` Pre-Implementation Briefs under `design-to-code-inputs/` and `pre-implementation-briefs/`
 - `implementation-parity-checklist.md`
 - checker result recorded in `state.json`
@@ -221,6 +223,10 @@ Required:
 - `tokens.json`
 - `visual-source-contract.json`
 - `visual-contracts/<page-id>.json` for each binding implemented page, including source image, target file, layout order, forbidden drift, drift budget, project constraints, and accepted deviations
+- `implementation-blueprint.json` as the low-context entrypoint for `design-to-code`, including routes, pass order, current pass read plan, page priorities, maturity targets, global style files, component plan refs, mock/content strategy refs, asset fallback policy, accepted engineering deviations, and verification levels
+- `page-matrix.json` with every page route and maturity (`L0 route-ready`, `L1 skeleton-ready`, `L2 content-ready`, `L3 system-styled`, `L4 core-fidelity`, `L5 functional-ready`), plus assets/mock/debt status
+- `component-blueprint.json` with component tiers: foundation first, repeated-pattern extraction after coverage, page-local components, and deferred components
+- `debt-ledger.json` for visual, asset, content, mock, interaction, fidelity, and engineering-deviation debts
 - `page-style-briefs/<page-id>.md` for each core implemented page
 - `design-to-code-inputs/manifest.json` plus per-page persisted crops/sections suitable for the `design-to-code` skill
 - `pre-implementation-briefs/<page-id>.md` in the `design-to-code` required brief shape before code generation
@@ -232,7 +238,7 @@ Optional orchestration deliverables:
 - `artifact-manifest.json`
 - `approval-records.json`
 - `handoff-manifest.json`
-- `mockup-code-map.json` and `design-debt.json` only for long-lived implementation projects
+- mockup-code-map.json only for long-lived implementation projects
 
 Output gate:
 - product/design document exists
@@ -303,12 +309,29 @@ Every core implemented page needs a compact page brief. Keep each brief short: v
 For approved mockups, page briefs must include visual-parity constraints, not just region names: screen order, dominant card shapes, layout pattern, first-screen composition, navigation count/labels, major color blocks, density, and button hierarchy. If these are absent, the brief is not implementation-ready.
 
 ### Design-to-code input gate
-When Level 3 implementation will produce code from images, prepare inputs for the `design-to-code` skill before coding: persisted per-page crops/section images, `design-to-code-inputs/manifest.json`, and `pre-implementation-briefs/<page-id>.md` in the `design-to-code` brief shape. `idea-to-design` prepares and gates these inputs; `design-to-code` performs the actual design-to-code execution and verification.
+When Level 3 implementation will produce code from images, prepare a low-context implementation package before coding. `idea-to-design` prepares and gates these inputs; `design-to-code` performs the actual implementation and verification.
+
+Required compact execution artifacts:
+- `implementation-blueprint.json`: the default entrypoint for downstream implementation; it should include `read_order`, `pass_sequence`, `current_pass`, `routes`, `core_pages`, `foundation_components`, `verification_policy`, and file refs for matrix/brief/contract details.
+- `page-matrix.json`: every route/page with maturity target, first-screen priority, section order, content/mock status, asset status, and open debt IDs.
+- `component-blueprint.json`: foundation components, repeated-pattern components, page-local components, deferred components, extraction timing, and accepted tradeoffs.
+- `debt-ledger.json`: known asset, visual, content, mock, interaction, fidelity, and engineering-deviation debts with severity and revisit pass.
+- `design-to-code-inputs/manifest.json` and `pre-implementation-briefs/<page-id>.md` remain required for binding visual sources, but they are detailed fallback inputs rather than the default first read.
 
 The pre-implementation brief must say whether the visual source is `binding` or `directional`. Default to `binding` for user-approved UI mockups. If a route/component constraint requires visible deviation from the approved mockup, record it as an accepted deviation, design change request, or design debt before coding.
 
+Use maturity targets to support human-like implementation order:
+- `L0 route-ready`: route/page file exists and is reachable.
+- `L1 skeleton-ready`: major sections exist in approved order.
+- `L2 content-ready`: realistic content/mock data fills sections.
+- `L3 system-styled`: global tokens/components/layout rules applied consistently.
+- `L4 core-fidelity`: priority first screen or core region matches binding source within accepted deviations.
+- `L5 functional-ready`: real interactions/API/state for the current implementation scope work.
+
+Token budget rule: the Level 3 package must let `design-to-code` start from `implementation-blueprint.json` and the current pass file refs, without loading full `Design-Spec.md`, every page brief, every visual contract, or source images by default.
+
 ### Implementation gate
-`implementation_gate` stays `blocked` until Level 3 required files exist, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
+`implementation_gate` stays `blocked` until Level 3 required files exist, the compact implementation blueprint package exists, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
@@ -323,12 +346,14 @@ Development agents must not silently redesign approved mockups. If the design is
 Prefer low-context operation by default.
 
 Rules:
-- keep one main doc, one asset directory, and one state file
+- keep one main doc, one asset directory, one state file, and compact Level 3 JSON indexes
 - ask minimal questions, then draft assumptions
 - expand only core flows and core pages by default
 - keep process logs out of final output
 - load supporting reference files only for current phase
 - use `checkpoints/` only at meaningful boundaries, not every tiny edit
+- for Level 3, write machine-readable short fields for routes, maturity, components, debt, and verification rather than long repeated prose
+- make `implementation-blueprint.json` the downstream default entrypoint; long docs and source images are traceability inputs, not default execution inputs
 
 Default scope:
 - 1-2 core flows

@@ -5,7 +5,8 @@ Run from the design package root:
   python scripts/check-design-handoff.py
 
 The checker is intentionally conservative and token-efficient: it checks file
-presence and state gate consistency, not subjective visual quality.
+presence, compact blueprint shape, and state gate consistency, not subjective
+visual quality.
 """
 from __future__ import annotations
 
@@ -19,6 +20,10 @@ REQUIRED = [
     "DESIGN.md",
     "tokens.json",
     "visual-source-contract.json",
+    "implementation-blueprint.json",
+    "page-matrix.json",
+    "component-blueprint.json",
+    "debt-ledger.json",
     "implementation-parity-checklist.md",
     "state.json",
 ]
@@ -31,6 +36,28 @@ def load_json(path: Path):
         return None
     except json.JSONDecodeError as exc:
         return {"__error__": f"invalid json: {exc}"}
+
+
+def require_json_object(rel: str, blockers: list[str]):
+    data = load_json(ROOT / rel)
+    if data is None:
+        blockers.append(f"missing required file: {rel}")
+        return None
+    if isinstance(data, dict) and "__error__" in data:
+        blockers.append(f"{rel} {data['__error__']}")
+        return None
+    if not isinstance(data, dict):
+        blockers.append(f"{rel} must be a JSON object")
+        return None
+    return data
+
+
+def require_keys(rel: str, data: dict | None, keys: list[str], blockers: list[str]) -> None:
+    if data is None:
+        return
+    missing = [key for key in keys if key not in data]
+    if missing:
+        blockers.append(f"{rel} missing keys: {', '.join(missing)}")
 
 
 def main() -> int:
@@ -52,6 +79,9 @@ def main() -> int:
             blockers.append("design_tokens.status is not ready")
         if state.get("page_style_briefs", {}).get("status") != "ready":
             blockers.append("page_style_briefs.status is not ready")
+        blueprint_state = state.get("implementation_blueprint")
+        if blueprint_state is not None and blueprint_state.get("status") != "ready":
+            blockers.append("implementation_blueprint.status is not ready")
         dtc = state.get("design_to_code_inputs")
         if dtc is not None and dtc.get("status") != "ready":
             blockers.append("design_to_code_inputs.status is not ready")
@@ -63,6 +93,42 @@ def main() -> int:
         approved = [m for m in contract.get("mockups", []) if m.get("status") == "approved"]
         if not approved:
             blockers.append("visual-source-contract.json has no approved mockups")
+
+    blueprint = require_json_object("implementation-blueprint.json", blockers)
+    require_keys(
+        "implementation-blueprint.json",
+        blueprint,
+        ["version", "mode", "read_order", "pass_sequence", "current_pass", "routes", "verification_policy", "read_by_pass"],
+        blockers,
+    )
+    if blueprint is not None:
+        if blueprint.get("mode") != "blueprint-driven":
+            warnings.append("implementation-blueprint.json mode is not blueprint-driven")
+        if not isinstance(blueprint.get("routes"), list) or not blueprint.get("routes"):
+            blockers.append("implementation-blueprint.json routes must be a non-empty list")
+        read_order = blueprint.get("read_order", [])
+        for rel in ["page-matrix.json", "component-blueprint.json", "debt-ledger.json"]:
+            if rel not in read_order:
+                warnings.append(f"implementation-blueprint.json read_order should include {rel}")
+
+    page_matrix = require_json_object("page-matrix.json", blockers)
+    require_keys("page-matrix.json", page_matrix, ["version", "pages"], blockers)
+    if page_matrix is not None and (not isinstance(page_matrix.get("pages"), list) or not page_matrix.get("pages")):
+        blockers.append("page-matrix.json pages must be a non-empty list")
+
+    component_blueprint = require_json_object("component-blueprint.json", blockers)
+    require_keys("component-blueprint.json", component_blueprint, ["version", "tiers"], blockers)
+
+    debt_ledger = require_json_object("debt-ledger.json", blockers)
+    require_keys("debt-ledger.json", debt_ledger, ["version", "items"], blockers)
+    if debt_ledger is not None and not isinstance(debt_ledger.get("items"), list):
+        blockers.append("debt-ledger.json items must be a list")
+
+    visual_contract_dir = ROOT / "visual-contracts"
+    if not visual_contract_dir.exists():
+        blockers.append("missing visual-contracts/ directory")
+    elif not list(visual_contract_dir.glob("*.json")):
+        blockers.append("visual-contracts/ has no page contracts")
 
     brief_dir = ROOT / "page-style-briefs"
     if not brief_dir.exists():
@@ -85,9 +151,6 @@ def main() -> int:
                 blockers.append("missing design-to-code-inputs/ directory")
             if not prebrief_dir.exists() or not list(prebrief_dir.glob("*.md")):
                 blockers.append("missing pre-implementation-briefs/*.md for design-to-code")
-
-    if not (ROOT / "design-debt.json").exists():
-        warnings.append("optional design-debt.json is missing")
 
     result = {
         "passed": not blockers,

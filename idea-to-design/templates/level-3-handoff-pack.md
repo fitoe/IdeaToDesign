@@ -9,6 +9,12 @@ Design-Spec.md
 DESIGN.md
 tokens.json
 visual-source-contract.json
+visual-contracts/
+  <page-id>.json
+implementation-blueprint.json
+page-matrix.json
+component-blueprint.json
+debt-ledger.json
 page-style-briefs/
   <page-id>.md
 implementation-parity-checklist.md
@@ -25,7 +31,6 @@ scripts/check-design-handoff.py
 
 ```text
 mockup-code-map.json
-design-debt.json
 implementation-snapshots/
 ```
 
@@ -48,7 +53,100 @@ implementation-snapshots/
 }
 ```
 
-## 3. page-style-briefs/<page-id>.md
+## 3. Compact implementation blueprint package
+
+`design-to-code` 默认先读这些文件。它们必须短、结构化、可按 pass 加载，避免实现阶段反复读完整设计文档和图片。
+
+### implementation-blueprint.json
+
+```json
+{
+  "version": "1.0",
+  "mode": "blueprint-driven",
+  "default_goal": "20% time for 80% visible coverage, then refine core fidelity",
+  "read_order": ["implementation-blueprint.json", "page-matrix.json", "component-blueprint.json", "debt-ledger.json"],
+  "pass_sequence": ["foundation", "coverage", "refinement", "fidelity"],
+  "current_pass": "foundation",
+  "reference_viewport": { "width": 390, "height": 844 },
+  "routes": [{ "page_id": "home", "route": "/", "priority": "core", "target_maturity": "L4" }],
+  "core_pages": ["home"],
+  "foundation_components": ["AppShell", "BaseCard", "PrimaryButton"],
+  "verification_policy": {
+    "coverage": "all routes/pages/major sections",
+    "system": "tokens, shell, component consistency",
+    "fidelity": "core pages and first screens only unless user requests more"
+  },
+  "read_by_pass": {
+    "foundation": ["tokens.json", "component-blueprint.json"],
+    "coverage": ["page-matrix.json", "design-to-code-inputs/manifest.json"],
+    "refinement": ["component-blueprint.json", "debt-ledger.json"],
+    "fidelity": ["visual-contracts/<page-id>.json", "page-style-briefs/<page-id>.md"]
+  }
+}
+```
+
+### page-matrix.json
+
+```json
+{
+  "version": "1.0",
+  "maturity_levels": ["L0 route-ready", "L1 skeleton-ready", "L2 content-ready", "L3 system-styled", "L4 core-fidelity", "L5 functional-ready"],
+  "pages": [
+    {
+      "page_id": "home",
+      "route": "/",
+      "priority": "core",
+      "target_maturity": "L4",
+      "current_maturity": "L0",
+      "first_screen_priority": true,
+      "sections": ["hero", "quick-actions", "recent-list"],
+      "content_strategy": "near-production mock content",
+      "asset_level": "A|B|C|D",
+      "open_debt_ids": []
+    }
+  ]
+}
+```
+
+### component-blueprint.json
+
+```json
+{
+  "version": "1.0",
+  "tiers": {
+    "foundation_first": ["AppShell", "PageContainer", "BaseCard", "PrimaryButton"],
+    "extract_after_repetition": ["StatsCard", "ListItem"],
+    "page_local_first": ["HomeHero"],
+    "deferred": ["RareModal"]
+  },
+  "rules": [
+    "first pass may duplicate page-local structures for coverage speed",
+    "extract repeated patterns after they appear 2-3 times",
+    "do not let abstraction block visible coverage"
+  ]
+}
+```
+
+### debt-ledger.json
+
+```json
+{
+  "version": "1.0",
+  "items": [
+    {
+      "id": "asset-home-hero",
+      "page": "home",
+      "type": "asset_fallback|visual|content|mock|interaction|fidelity|engineering_deviation",
+      "severity": "low|medium|high|blocker",
+      "revisit_pass": "refinement|fidelity|functional-wiring",
+      "status": "open|accepted|fixed",
+      "note": ""
+    }
+  ]
+}
+```
+
+## 4. page-style-briefs/<page-id>.md
 
 ```md
 # <页面名> Page Style Brief
@@ -145,4 +243,11 @@ Each implemented page also needs `pre-implementation-briefs/<page-id>.md` using 
 
 ## 7. State Rule
 
-`implementation_gate.status` may be `open` only when Level 3 required files exist, design-to-code inputs exist for target pages, and `scripts/check-design-handoff.py` passes. If the user waives the gate, record the waiver explicitly in `implementation_gate.waivers`.
+`implementation_gate.status` may be `open` only when Level 3 required files exist, the compact implementation blueprint package exists, design-to-code inputs exist for target pages, and `scripts/check-design-handoff.py` passes. If the user waives the gate, record the waiver explicitly in `implementation_gate.waivers`.
+
+Default downstream read path:
+1. `state.json`
+2. `implementation-blueprint.json`
+3. only the current pass files listed in `implementation-blueprint.json.read_by_pass`
+
+Do not require downstream agents to load full `Design-Spec.md`, all page briefs, all visual contracts, or source images unless the current pass or a blocker needs them.
