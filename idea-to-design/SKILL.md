@@ -23,11 +23,15 @@ Standalone rule:
 - outputs should stay useful for direct human review and for other orchestrators
 
 Core rule:
-- structured spec is source of truth
-- images express decisions, not replace them
+- structured product and interaction spec is source of truth for product behavior
+- images express and may upgrade visual decisions, but they must not silently change product logic
+- before GPT Image 2 or other high-fidelity generation, visual style rules are hypotheses only; do not freeze detailed colors, card anatomy, shadows, spacing, icon style, or component anatomy from text alone
 - approved mockups are binding visual sources for UI implementation unless the user explicitly says they are only directional
+- after a mockup is user-approved, run `Visual Freeze` and `Post-Visual Extraction`: extract tokens, component anatomy, layout constraints, visual contracts, accepted deviations, and implementation blueprint from the approved image, not from pre-image imagination
+- if a user-approved mockup conflicts with earlier text style hypotheses but does not change product structure or business rules, the approved mockup wins and the docs/blueprints must be refreshed
 - do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, and first-screen composition must be captured as implementation constraints
-- formal UI work must be tokenized, page-briefed, converted into compact implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
+- formal UI work must be tokenized, page-briefed, converted into compact post-visual implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
+- `implementation-blueprint.json` must be generated or refreshed after `visual_freeze.status = "approved"`; pre-visual blueprints are not implementation gates
 - `idea-to-design` should front-load rules that would otherwise cause implementation-time analysis: routes, page priority, global style tokens, component tiers, mock/content strategy, asset fallback levels, accepted engineering deviations, maturity targets, and verification level
 - `design-to-code` owns the design-to-code execution step; `idea-to-design` owns the preparation and gate
 - `state.json` is session continuity and gate status source of truth
@@ -126,13 +130,14 @@ Rules:
 
 ### 3. Visual Direction
 Goal:
-- establish one stable design direction before heavy image generation
+- establish one stable pre-visual direction before heavy image generation, without freezing detailed style rules that should come from approved images
 
 Output:
-- design direction
+- design direction hypotheses
 - `Creative Direction Summary`
-- key visual principles
+- key product/structure constraints
 - text wireframes for core pages
+- `pre_visual_blueprint` notes: structure, content hierarchy, visual exploration goals, innovation whitelist/blacklist, and prompt constraints
 
 Rules:
 - provide 2-3 candidate visual directions when needed
@@ -141,6 +146,11 @@ Rules:
 - choose one before high-fidelity work
 - use text wireframes before image wireframes
 - record chosen direction and rejected directions in `state.json`
+- classify visual decisions as:
+  - `must_preserve`: product/page structure, task flow, module order, required CTA, business states
+  - `explore_with_image`: color, card shape, background, lighting, illustration, icon style, decorative rhythm
+  - `freeze_after_image`: tokens, exact component anatomy, spacing rhythm, shadows, first-screen proportions, visual anchors
+- prompts should allow GPT Image 2 to upgrade the visual expression while preserving product structure and information hierarchy
 
 ### 4. Image Iteration
 Goal:
@@ -158,10 +168,13 @@ Rules:
 - record what to keep, what to change, what remains unresolved
 - use `references/aesthetic-review-system.md` before accepting core-page high-fidelity visuals
 - core pages should pass `Aesthetic Review` before final reference acceptance
+- generated images may improve visual style beyond the pre-visual hypothesis; accept improvements when they do not change product structure or business logic
 - image-generated new features do not become official unless explicitly accepted
+- before user approval, run a design adoption review: better-than-text visual ideas, product-rule violations, new feature proposals, missing required information, implementation-cost risks, and what should enter the post-visual blueprint
 - update page-level fidelity and key asset refs after each accepted round
 - in CLI/WSL review, if the user asks to inspect boards visually, open verified local board files with `eog <path...>` and stop at the approval gate until they explicitly confirm
 - after generated boards are reviewed, do not mark them approved and do not prepare implementation handoff until the user explicitly approves the visual sources
+- when the user approves a high-fidelity visual source, set `visual_freeze.status = "approved"`, record source paths and approval time, then run Post-Visual Extraction before implementation handoff
 
 ### 5. Finalize
 Goal:
@@ -188,7 +201,7 @@ Rules:
 - process traces stay outside main doc unless needed
 - images first, text only for decisions, interactions, constraints, and implementation-critical style rules
 - high-fidelity mockup approval does not open the implementation gate by itself
-- a user-approved mockup opens only the visual-source gate; implementation gate opens only after the approved image has been converted into page-level visual contracts and `design-to-code` inputs
+- a user-approved mockup opens only the visual-source gate and Visual Freeze; implementation gate opens only after Post-Visual Extraction refreshes tokens, visual contracts, design-to-code inputs, and blueprint files from the approved image
 - never write `visual sources are directional` unless the user explicitly chose directional-only implementation; default is binding visual parity for approved UI mockups
 - write a fresh handoff summary before ending work
 - refresh `next_prompt_for_agent` before pausing or ending work
@@ -287,9 +300,37 @@ Before image generation, define the page/state list and create a visual coverage
 
 Approval rule: if the user reviews a board and says it is approved, that board becomes a binding visual source for the pages it covers. Record the approval, local asset path, covered page IDs, accepted deviations if any, and whether the user explicitly allowed directional-only implementation. If the user did not allow directional-only implementation, treat visual parity as required.
 
-A visual-source approval does not approve code implementation. Keep `implementation_gate.status = "blocked"` until visual contracts, design-to-code inputs, parity/waiver records, and checker pass. Ask or record a separate user instruction before starting code.
+A visual-source approval does not approve code implementation. Keep `implementation_gate.status = "blocked"` until Visual Freeze is approved, Post-Visual Extraction has refreshed visual contracts, design-to-code inputs, parity/waiver records, and checker pass. Ask or record a separate user instruction before starting code.
 
 Prefer single-page crops for implementation. Multi-page boards are acceptable for review, but Level 3 design-to-code inputs should include per-page crops or explain why the full board is the only available source.
+
+### Visual Freeze gate
+Visual Freeze is the boundary between exploration and implementation.
+
+Before freeze:
+- product structure, routes, task flows, module order, required content, and prompt constraints may be planned
+- detailed style rules are hypotheses, not implementation truth
+- do not generate or treat `implementation-blueprint.json` as final implementation input
+
+Freeze opens only when:
+- user explicitly approves the high-fidelity visual source or approved equivalent
+- source image paths and covered page IDs are recorded
+- approval timestamp/version is recorded in `state.json.visual_freeze`
+- visual source mode is recorded as `binding` or user-waived `directional`
+
+Post-Visual Extraction must happen after freeze and before implementation gate:
+- extract or refresh `DESIGN.md` and `tokens.json` from the approved visual source
+- extract component anatomy, card shapes, spacing rhythm, shadows, typography hierarchy, background system, navigation style, and first-screen proportions
+- update `visual-contracts/<page-id>.json` and page briefs from the approved image
+- update `implementation-blueprint.json`, `page-matrix.json`, `component-blueprint.json`, and `debt-ledger.json`
+- record `source_priority`: user requirement, product spec, approved image, engineering constraint, accepted deviation
+- record image-generated proposals in `visual-proposals.json` when they add product-like elements
+
+If approved image and earlier text style conflict:
+- keep product structure and business rules from the spec
+- prefer the approved image for visual style and component anatomy
+- update docs and blueprints instead of making `design-to-code` resolve the conflict
+- record discarded text hypotheses as superseded, not as competing constraints
 
 ### Visual contract gate
 For every binding implemented page, create `visual-contracts/<page-id>.json` before code generation. It must include: `visual_source_mode`, `source_image`, `target_file`, `reference_width`, `layout_order`, `visual_anchors`, `forbidden_drift`, `drift_budget`, `project_constraints`, `accepted_deviations`, and `parity_verification`.
@@ -331,7 +372,7 @@ Use maturity targets to support human-like implementation order:
 Token budget rule: the Level 3 package must let `design-to-code` start from `implementation-blueprint.json` and the current pass file refs, without loading full `Design-Spec.md`, every page brief, every visual contract, or source images by default.
 
 ### Implementation gate
-`implementation_gate` stays `blocked` until Level 3 required files exist, the compact implementation blueprint package exists, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
+`implementation_gate` stays `blocked` until Level 3 required files exist, `visual_freeze.status = "approved"`, Post-Visual Extraction has refreshed the compact implementation blueprint package after the approved visual source version, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.

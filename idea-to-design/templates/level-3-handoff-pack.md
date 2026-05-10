@@ -9,6 +9,7 @@ Design-Spec.md
 DESIGN.md
 tokens.json
 visual-source-contract.json
+visual-proposals.json
 visual-contracts/
   <page-id>.json
 implementation-blueprint.json
@@ -53,6 +54,51 @@ implementation-snapshots/
 }
 ```
 
+## 2. Visual Freeze and post-visual extraction
+
+`implementation-blueprint.json` is valid only after the approved visual source is frozen and extracted. Pre-visual style hypotheses are useful for prompting, but they are not implementation constraints.
+
+### state.json visual_freeze
+
+```json
+{
+  "visual_freeze": {
+    "status": "approved",
+    "approved_at": "YYYY-MM-DDTHH:mm:ssZ",
+    "source_version": "home-large-v2",
+    "source_paths": ["assets/hi-fi/home-large-v2.png"],
+    "covered_pages": ["home"],
+    "visual_source_mode": "binding",
+    "post_visual_extraction_status": "complete",
+    "post_visual_extracted_at": "YYYY-MM-DDTHH:mm:ssZ"
+  }
+}
+```
+
+### extraction rules
+
+After user approval:
+- extract visual tokens, component anatomy, background system, typography hierarchy, spacing rhythm, card shapes, navigation style, first-screen proportions, and key visual anchors from the approved image
+- update `DESIGN.md`, `tokens.json`, `visual-source-contract.json`, `visual-contracts/*`, page briefs, and compact blueprint files from the image
+- if the approved image improves on pre-visual text without changing product rules, the image wins and text hypotheses are marked superseded
+- if the image adds product-like elements, record them in `visual-proposals.json` rather than silently adding them to product scope
+
+### visual-proposals.json
+
+```json
+{
+  "proposals": [
+    {
+      "id": "home-extra-metric-card",
+      "source_image": "assets/hi-fi/home-large-v2.png",
+      "type": "image_generated_product_like_element",
+      "decision": "defer",
+      "note": "Generated metric card looks useful but was not part of approved product scope."
+    }
+  ]
+}
+```
+
 ## 3. Compact implementation blueprint package
 
 `design-to-code` 默认先读这些文件。它们必须短、结构化、可按 pass 加载，避免实现阶段反复读完整设计文档和图片。
@@ -62,7 +108,13 @@ implementation-snapshots/
 ```json
 {
   "version": "1.0",
-  "mode": "blueprint-driven",
+  "mode": "blueprint_driven",
+  "visual_freeze_ref": {
+    "status": "approved",
+    "source_version": "home-large-v2",
+    "post_visual_extraction_status": "complete"
+  },
+  "source_priority": ["user_requirement", "product_spec", "approved_image", "engineering_constraint", "accepted_deviation"],
   "default_goal": "20% time for 80% visible coverage, then refine core fidelity",
   "read_order": ["implementation-blueprint.json", "page-matrix.json", "component-blueprint.json", "debt-ledger.json"],
   "pass_sequence": ["foundation", "coverage", "refinement", "fidelity"],

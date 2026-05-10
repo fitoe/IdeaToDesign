@@ -20,6 +20,7 @@ REQUIRED = [
     "DESIGN.md",
     "tokens.json",
     "visual-source-contract.json",
+    "visual-proposals.json",
     "implementation-blueprint.json",
     "page-matrix.json",
     "component-blueprint.json",
@@ -72,9 +73,27 @@ def main() -> int:
     if isinstance(state, dict) and "__error__" in state:
         blockers.append(f"state.json {state['__error__']}")
     elif state is not None:
+        visual_freeze = state.get("visual_freeze", {})
+        if visual_freeze.get("status") != "approved":
+            blockers.append("visual_freeze.status is not approved")
+        if visual_freeze.get("post_visual_extraction_status") != "complete":
+            blockers.append("visual_freeze.post_visual_extraction_status is not complete")
+        if not visual_freeze.get("source_paths"):
+            blockers.append("visual_freeze.source_paths is empty")
+        if not visual_freeze.get("source_version"):
+            blockers.append("visual_freeze.source_version is missing")
+        post_extract = state.get("post_visual_extraction", {})
+        if post_extract and post_extract.get("status") != "complete":
+            blockers.append("post_visual_extraction.status is not complete")
         gate = state.get("implementation_gate", {})
         if gate.get("status") != "open":
             blockers.append("implementation_gate.status is not open")
+        if gate.get("requires_visual_freeze") is not True:
+            warnings.append("implementation_gate.requires_visual_freeze should be true")
+        if gate.get("requires_post_visual_extraction") is not True:
+            warnings.append("implementation_gate.requires_post_visual_extraction should be true")
+        if gate.get("blueprint_generated_after_visual_freeze") is not True:
+            blockers.append("implementation_gate.blueprint_generated_after_visual_freeze is not true")
         if state.get("design_tokens", {}).get("status") != "ready":
             blockers.append("design_tokens.status is not ready")
         if state.get("page_style_briefs", {}).get("status") != "ready":
@@ -98,12 +117,20 @@ def main() -> int:
     require_keys(
         "implementation-blueprint.json",
         blueprint,
-        ["version", "mode", "read_order", "pass_sequence", "current_pass", "routes", "verification_policy", "read_by_pass"],
+        ["version", "mode", "visual_freeze_ref", "source_priority", "read_order", "pass_sequence", "current_pass", "routes", "verification_policy", "read_by_pass"],
         blockers,
     )
     if blueprint is not None:
-        if blueprint.get("mode") != "blueprint-driven":
+        if blueprint.get("mode") not in {"blueprint-driven", "blueprint_driven"}:
             warnings.append("implementation-blueprint.json mode is not blueprint-driven")
+        visual_ref = blueprint.get("visual_freeze_ref", {})
+        if isinstance(visual_ref, dict):
+            if visual_ref.get("status") != "approved":
+                blockers.append("implementation-blueprint.json visual_freeze_ref.status is not approved")
+            if visual_ref.get("post_visual_extraction_status") != "complete":
+                blockers.append("implementation-blueprint.json visual_freeze_ref.post_visual_extraction_status is not complete")
+        else:
+            blockers.append("implementation-blueprint.json visual_freeze_ref must be an object")
         if not isinstance(blueprint.get("routes"), list) or not blueprint.get("routes"):
             blockers.append("implementation-blueprint.json routes must be a non-empty list")
         read_order = blueprint.get("read_order", [])
@@ -123,6 +150,10 @@ def main() -> int:
     require_keys("debt-ledger.json", debt_ledger, ["version", "items"], blockers)
     if debt_ledger is not None and not isinstance(debt_ledger.get("items"), list):
         blockers.append("debt-ledger.json items must be a list")
+
+    visual_proposals = require_json_object("visual-proposals.json", blockers)
+    if visual_proposals is not None and "proposals" in visual_proposals and not isinstance(visual_proposals.get("proposals"), list):
+        blockers.append("visual-proposals.json proposals must be a list")
 
     visual_contract_dir = ROOT / "visual-contracts"
     if not visual_contract_dir.exists():

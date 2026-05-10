@@ -157,7 +157,10 @@
     ],
     "checker": "scripts/check-design-handoff.py",
     "last_check": "",
-    "waivers": []
+    "waivers": [],
+    "requires_visual_freeze": true,
+    "requires_post_visual_extraction": true,
+    "blueprint_generated_after_visual_freeze": false
   },
   "implementation_blueprint": {
     "status": "not_required",
@@ -180,5 +183,28 @@
       "L5 functional-ready"
     ],
     "matrix": "page-matrix.json when delivery_level is level-3"
+  },
+  "pre_visual_blueprint": {
+    "status": "draft",
+    "must_preserve": [],
+    "explore_with_image": [],
+    "freeze_after_image": [],
+    "prompt_constraints": []
+  },
+  "visual_freeze": {
+    "status": "blocked",
+    "approved_at": null,
+    "source_version": null,
+    "source_paths": [],
+    "covered_pages": [],
+    "visual_source_mode": "binding",
+    "post_visual_extraction_status": "not_started",
+    "post_visual_extracted_at": null
+  },
+  "post_visual_extraction": {
+    "status": "not_started",
+    "refreshed_files": [],
+    "superseded_text_hypotheses": [],
+    "visual_proposals_path": "visual-proposals.json"
   }
 }
