@@ -27,9 +27,9 @@ Core rule:
 - images express and may upgrade visual decisions, but they must not silently change product logic
 - before GPT Image 2 or other high-fidelity generation, visual style rules are hypotheses only; do not freeze detailed colors, card anatomy, shadows, spacing, icon style, or component anatomy from text alone
 - approved mockups are binding visual sources for UI implementation unless the user explicitly says they are only directional
-- after a mockup is user-approved, run `Visual Freeze` and `Post-Visual Extraction`: extract tokens, component anatomy, layout constraints, visual contracts, accepted deviations, and implementation blueprint from the approved image, not from pre-image imagination
+- after a mockup is user-approved, run `Visual Freeze` and `Post-Visual Extraction`: extract tokens, component anatomy, layout constraints, section-level visual contracts, accepted deviations, and implementation blueprint from the approved image, not from pre-image imagination
 - if a user-approved mockup conflicts with earlier text style hypotheses but does not change product structure or business rules, the approved mockup wins and the docs/blueprints must be refreshed
-- do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, and first-screen composition must be captured as implementation constraints
+- do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, first-screen composition, and section-specific anatomy must be captured as implementation constraints
 - formal UI work must be tokenized, page-briefed, converted into compact post-visual implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
 - `implementation-blueprint.json` must be generated or refreshed after `visual_freeze.status = "approved"`; pre-visual blueprints are not implementation gates
 - `idea-to-design` should front-load rules that would otherwise cause implementation-time analysis: routes, page priority, global style tokens, component tiers, mock/content strategy, asset fallback levels, accepted engineering deviations, maturity targets, and verification level
@@ -323,6 +323,7 @@ Freeze opens only when:
 Post-Visual Extraction must happen after freeze and before implementation gate:
 - extract or refresh `DESIGN.md` and `tokens.json` from the approved visual source
 - extract component anatomy, card shapes, spacing rhythm, shadows, typography hierarchy, background system, navigation style, and first-screen proportions
+- extract section-level contracts from the approved image for priority regions: exact row/card counts, grid/list pattern, visible labels, dominant card anatomy, color blocks, icon/image roles, density, action hierarchy, and forbidden generic-component substitutions
 - update `visual-contracts/<page-id>.json` and page briefs from the approved image
 - update `implementation-blueprint.json`, `page-matrix.json`, `component-blueprint.json`, and `debt-ledger.json`
 - record `source_priority`: user requirement, product spec, approved image, engineering constraint, accepted deviation
@@ -349,7 +350,7 @@ When approved mockups will be implemented, generate or maintain `DESIGN.md` and 
 ### Page brief gate
 Every core implemented page needs a compact page brief. Keep each brief short: visual source, required regions, must-preserve rules, forbidden drift, and first-screen acceptance criteria. Avoid repeating global tokens in every brief.
 
-For approved mockups, page briefs must include visual-parity constraints, not just region names: screen order, dominant card shapes, layout pattern, first-screen composition, navigation count/labels, major color blocks, density, and button hierarchy. If these are absent, the brief is not implementation-ready.
+For approved mockups, page briefs must include visual-parity constraints, not just region names: screen order, dominant card shapes, layout pattern, first-screen composition, navigation count/labels, major color blocks, density, and button hierarchy. For core/high-fidelity regions, briefs or visual contracts must also include section contracts with exact row/card counts, grid/list pattern, visible labels, icon/image role, status-color semantics, and forbidden drift examples such as changing a 4-row queue to 3 rows or replacing semantic icons with text placeholders. If these are absent, the brief is not implementation-ready for `L4 core-fidelity`.
 
 ### Design-to-code input gate
 When Level 3 implementation will produce code from images, prepare a low-context implementation package before coding. `idea-to-design` prepares and gates these inputs; `design-to-code` performs the actual implementation and verification.
@@ -387,7 +388,7 @@ Token budget rule: the Level 3 package must let `design-to-code` start from `imp
 `implementation_gate` stays `blocked` until Level 3 required files exist, `visual_freeze.status = "approved"`, Post-Visual Extraction has refreshed the compact implementation blueprint package after the approved visual source version, design-to-code inputs exist for target core pages, visual contracts exist for binding pages, parity verification or user waiver is recorded, and the checker passes. If implementation starts without Level 3, label it as a user-waived exception in `state.json` and in the handoff notes.
 
 ### Parity gate
-For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
+For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt. If user feedback says the implementation is not like the design, treat that as a parity-gate failure until the bound mockup/crop is reopened and the section-level mismatches are diagnosed.
 
 Do not accept a checkpoint that only says required regions exist. It must compare the implementation screenshot against the approved visual source on at least: layout order, major proportions, card anatomy, color blocks, navigation labels/count, first-screen visible content, spacing rhythm, and primary/secondary action hierarchy.
 
