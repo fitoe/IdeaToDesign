@@ -33,6 +33,8 @@ Core rule:
 - formal UI work must be tokenized, page-briefed, converted into compact post-visual implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
 - `implementation-blueprint.json` must be generated or refreshed after `visual_freeze.status = "approved"`; pre-visual blueprints are not implementation gates
 - `idea-to-design` should front-load rules that would otherwise cause implementation-time analysis: routes, page priority, global style tokens, component tiers, mock/content strategy, asset fallback levels, accepted engineering deviations, maturity targets, and verification level
+- implementation handoff should use trust-first, checkpoint-based verification by default: downstream agents should not run full lint, full type-check, full build, broad regression, or broad E2E after every small edit
+- full lint, full type-check, full build, broad regression, and broad E2E are stage-gate checks for pass completion, milestone or handoff closure, merge readiness, release readiness, or high-risk foundation changes
 - `design-to-code` owns the design-to-code execution step; `idea-to-design` owns the preparation and gate
 - `state.json` is session continuity and gate status source of truth
 - all human-facing generated outputs must be in Chinese by default
@@ -369,6 +371,16 @@ Use maturity targets to support human-like implementation order:
 - `L4 core-fidelity`: priority first screen or core region matches binding source within accepted deviations.
 - `L5 functional-ready`: real interactions/API/state for the current implementation scope work.
 
+Use verification policy fields to preserve implementation flow:
+- `mode`: `trust-first-checkpoint-based`
+- `active_editing`: no command-driven verification unless a concrete failure signal appears
+- `stage_gate_commands`: full lint, full type-check, full build, broad regression, and broad E2E
+- `stage_gate_moments`: pass completion, core fidelity checkpoint, handoff, merge readiness, and release readiness
+- `early_escalation_triggers`: dependency or lockfile changes, build config changes, shared types, public APIs, routing contracts, auth, permissions, payments, security, privacy, data mutation, schema, migrations, persistence, or broad cross-module refactors
+- `failure_classification`: blocker, baseline, environment, third-party, or deferred
+
+For visual implementation, this policy does not weaken parity requirements. It only controls when expensive command-driven verification runs.
+
 Token budget rule: the Level 3 package must let `design-to-code` start from `implementation-blueprint.json` and the current pass file refs, without loading full `Design-Spec.md`, every page brief, every visual contract, or source images by default.
 
 ### Implementation gate
@@ -378,6 +390,8 @@ Token budget rule: the Level 3 package must let `design-to-code` start from `imp
 For UI implementation checkpoints, functional tests and builds are insufficient. The implementation consumer must identify the mockup/page brief, capture a mobile screenshot, compare structure/density/card anatomy/button hierarchy, and record differences as fixed, accepted deviation, user decision, or design debt.
 
 Do not accept a checkpoint that only says required regions exist. It must compare the implementation screenshot against the approved visual source on at least: layout order, major proportions, card anatomy, color blocks, navigation labels/count, first-screen visible content, spacing rhythm, and primary/secondary action hierarchy.
+
+Parity verification and command-driven verification are separate gates. Parity checks remain required at UI checkpoints, but full lint, full type-check, full build, broad regression, and broad E2E should stay deferred to stage gates unless a high-risk foundation change requires earlier escalation.
 
 ### Change request rule
 Development agents must not silently redesign approved mockups. If the design is impractical, create a design change request or design debt item instead of improvising the UI in code.

@@ -124,6 +124,12 @@ After user approval:
   "core_pages": ["home"],
   "foundation_components": ["AppShell", "BaseCard", "PrimaryButton"],
   "verification_policy": {
+    "mode": "trust-first-checkpoint-based",
+    "active_editing": "do not run command-driven verification unless a concrete failure signal appears",
+    "stage_gate_commands": ["full lint", "full type-check", "full build", "broad regression", "broad E2E"],
+    "stage_gate_moments": ["pass completion", "core fidelity checkpoint", "handoff", "merge readiness", "release readiness"],
+    "early_escalation_triggers": ["dependency or lockfile change", "build/bundler/lint/test/typescript config change", "shared type/public API/routing contract change", "auth/permission/payment/security/privacy/data mutation/schema/migration/persistence change", "broad cross-module refactor"],
+    "failure_classification": ["blocker", "baseline", "environment", "third-party", "deferred"],
     "coverage": "all routes/pages/major sections",
     "system": "tokens, shell, component consistency",
     "fidelity": "core pages and first screens only unless user requests more"
@@ -249,9 +255,10 @@ For each UI checkpoint:
 - [ ] No silent redesign or PC-style fallback
 
 ## Verification
-- [ ] Functional checks pass
+- [ ] Focused functional checks pass if this checkpoint includes functional scope
 - [ ] Mobile screenshot captured
 - [ ] Difference recorded as fixed / accepted deviation / user decision / design debt
+- [ ] Full lint/type/build deferred unless this is a stage gate or high-risk foundation changed
 ```
 
 ## 5. design-debt.json optional shape
@@ -303,3 +310,9 @@ Default downstream read path:
 3. only the current pass files listed in `implementation-blueprint.json.read_by_pass`
 
 Do not require downstream agents to load full `Design-Spec.md`, all page briefs, all visual contracts, or source images unless the current pass or a blocker needs them.
+
+Default downstream verification policy:
+- trust model-generated local code during active editing unless a concrete failure signal appears
+- defer full lint, full type-check, full build, broad regression, and broad E2E until pass completion, handoff, merge readiness, release readiness, or high-risk foundation changes
+- keep visual parity checks separate from command-driven verification; parity remains required for UI checkpoints even when full command checks are deferred
+- classify stage-gate failures as blocker, baseline, environment, third-party, or deferred before fixing
