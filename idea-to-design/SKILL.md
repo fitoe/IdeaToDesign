@@ -32,6 +32,7 @@ Core rule:
 - if a user-approved mockup conflicts with earlier text style hypotheses but does not change product structure or business rules, the approved mockup wins and the docs/blueprints must be refreshed
 - do not downgrade approved visual boards into loose style references; page layout, hierarchy, density, card anatomy, navigation count, first-screen composition, and section-specific anatomy must be captured as implementation constraints
 - formal UI work must be tokenized, page-briefed, converted into compact post-visual implementation blueprints, and packaged as `design-to-code` consumable inputs before coding
+- for PNG/GPT Image 2 mockups, include or support lightweight Visual IR in the Level 3 package when implementation fidelity matters: page type, route, source refs, reference viewport, ordered sections, bbox/normalized bounds, required `data-section` anchors, first-screen density, card/list anatomy, action hierarchy, must-not-do drift rules, and asset strategy
 - visual contracts and implementation briefs must specify icon source requirements for icon-bearing regions: preferred existing icon system/library, semantic icon roles per module/action, forbidden placeholders, and whether the region is a card/link/grid entry rather than a native button. For Iconify/UnoCSS projects, require statically discoverable icon classes or an explicit safelist note.
 - `implementation-blueprint.json` must be generated or refreshed after `visual_freeze.status = "approved"`; pre-visual blueprints are not implementation gates
 - `idea-to-design` should front-load rules that would otherwise cause implementation-time analysis: routes, page priority, global style tokens, component tiers, mock/content strategy, asset fallback levels, accepted engineering deviations, maturity targets, and verification level
@@ -195,6 +196,7 @@ Level 3 output for formal UI implementation:
 - `DESIGN.md` and `tokens.json` generated or shaped with the `design-md` rules
 - `visual-source-contract.json`
 - machine-readable page contracts under `visual-contracts/`
+- optional lightweight Visual IR under `visual-ir/` for PNG/GPT Image 2 or other non-layered mockups when fidelity matters
 - compact page briefs under `page-style-briefs/`
 - compact default execution artifacts: `implementation-blueprint.json`, `page-matrix.json`, `component-blueprint.json`, and `debt-ledger.json`
 - segmented/cropped design inputs and `design-to-code` Pre-Implementation Briefs under `design-to-code-inputs/` and `pre-implementation-briefs/`
@@ -327,6 +329,7 @@ Post-Visual Extraction must happen after freeze and before implementation gate:
 - extract or refresh `DESIGN.md` and `tokens.json` from the approved visual source
 - extract component anatomy, card shapes, spacing rhythm, shadows, typography hierarchy, background system, navigation style, and first-screen proportions
 - extract section-level contracts from the approved image for priority regions: exact row/card counts, grid/list pattern, visible labels, dominant card anatomy, color blocks, icon/image roles, density, action hierarchy, and forbidden generic-component substitutions
+- when the design source is a flat PNG/mockup and implementation fidelity matters, create lightweight Visual IR or an equivalent structured contract instead of relying on prose only: `page_id`, `route`, `viewport`, `page_type`, ordered sections, bbox/normalized bounds, section anchors, first-screen density, must-not-do drift rules, and asset strategy
 - for visually complex GPT Image 2 regions, add a `section_visual_anatomy` block with implementation-grade description: bounding box/proportion within the screen, dominant shape silhouette, background layers, decorative objects and their approximate positions, foreground data hierarchy, typography scale, glass/blur/shadow treatment, icon library/style mapping, and 3-5 non-negotiable visual anchors. Do not summarize a complex generated card as only "dark tech card with health ring"; that is too weak for faithful implementation.
 - update `visual-contracts/<page-id>.json` and page briefs from the approved image
 - update `implementation-blueprint.json`, `page-matrix.json`, `component-blueprint.json`, and `debt-ledger.json`
