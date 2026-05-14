@@ -61,6 +61,29 @@ Before handing to implementation:
 - downstream artifacts identify routes/pages and maturity targets
 - no secrets/tokens/private credentials are stored in design artifacts
 
+
+## PlanToDelivery Project-State Collaboration
+
+When routed by `PlanToDelivery`, treat project-root `project-state/` as the portable handoff layer. Do not directly modify global `execution-progress.json` or `artifact-manifest.json` unless explicitly authorized.
+
+Produce or update design artifacts, usually under `project-state/design/` or the project-approved equivalent:
+- `Design-Spec.md`
+- `visual-source-contract.json`
+- `implementation-blueprint.json`
+- `page-matrix.json`
+- `component-blueprint.json`
+- `debt-ledger.json`
+- `visual-ir/*` for fidelity-critical PNG/GPT Image 2 sources
+
+Return compact handoff suggestions to `PlanToDelivery`:
+- `suggested_manifest_entries` for each artifact with `id`, `kind`, `path`, `status`, `producer`, `consumer`, and summary
+- `suggested_progress_updates` for design tasks, open decisions, user confirmation, and handoff readiness
+- design gate recommendation, but do not mark the global gate passed yourself
+- blockers/debts when visual source, approval, requirements, or extraction are missing
+- evidence such as approved source paths, review notes, or user confirmation references
+
+After Visual Freeze and Post-Visual Extraction, recommend design artifacts as `ready` or `approved` for consumers `PlanToDelivery`, `IdeaToTech`, and `design-to-code`. If design changes later, report affected artifacts as `stale` or `superseded`.
+
 ## Progressive Loading
 
 Load only when needed:
