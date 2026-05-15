@@ -75,14 +75,46 @@ Produce or update design artifacts, usually under `project-state/design/` or the
 - `debt-ledger.json`
 - `visual-ir/*` for fidelity-critical PNG/GPT Image 2 sources
 
-Return compact handoff suggestions to `PlanToDelivery`:
+Return compact delta handoff suggestions to `PlanToDelivery`:
+- `result`: `completed`, `partial`, or `blocked`
+- `changed_files` and `produced_artifacts` for design artifacts created or updated
 - `suggested_manifest_entries` for each artifact with `id`, `kind`, `path`, `status`, `producer`, `consumer`, and summary
 - `suggested_progress_updates` for design tasks, open decisions, user confirmation, and handoff readiness
 - design gate recommendation, but do not mark the global gate passed yourself
 - blockers/debts when visual source, approval, requirements, or extraction are missing
 - evidence such as approved source paths, review notes, or user confirmation references
+- `next_recommended_task`, usually routing to `design-to-code` after Visual Freeze and Post-Visual Extraction
 
 After Visual Freeze and Post-Visual Extraction, recommend design artifacts as `ready` or `approved` for consumers `PlanToDelivery`, `IdeaToTech`, and `design-to-code`. If design changes later, report affected artifacts as `stale` or `superseded`.
+
+## Low-Context Design Handoff Delta
+
+When routed by `PlanToDelivery`, design work should stay scoped to the active page, route, section, or design decision named in the invocation brief.
+
+Rules:
+- do not reopen broad visual exploration after a visual source is approved unless the source is missing, stale, rejected, or requirements changed;
+- read only the design/product artifacts referenced by `input_artifact_refs` plus the minimum source image/Figma/context needed for the active slice;
+- persist heavy design analysis, Visual IR, review notes, prompt outputs, and handoff packs as files under `project-state/design/` or the project-approved design artifact directory;
+- return artifact IDs/paths and a concise gate recommendation instead of long visual prose;
+- mark superseded or stale design artifacts explicitly when a redesign occurs; do not leave conflicting sources active;
+- after Level 3 handoff, recommend routing to `design-to-code` and stop carrying design exploration context forward.
+
+Default delta response:
+
+```json
+{
+  "result": "completed | partial | blocked",
+  "changed_files": [],
+  "produced_artifacts": [],
+  "suggested_manifest_entries": [],
+  "suggested_progress_updates": [],
+  "suggested_blockers": [],
+  "suggested_gate_updates": [],
+  "evidence": [],
+  "largest_remaining_gaps": [],
+  "next_recommended_task": ""
+}
+```
 
 ## Progressive Loading
 
