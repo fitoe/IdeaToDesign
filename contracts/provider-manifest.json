@@ -1,0 +1,19 @@
+{
+  "schema_version": "provider-manifest/v1",
+  "provider_id": "idea-to-design",
+  "display_name": "IdeaToDesign",
+  "capabilities": [
+    "product_visual_design",
+    "visual_source_creation"
+  ],
+  "input_schema_refs": {
+    "product_visual_design": "contracts/product-visual-design-task-v1.md",
+    "visual_source_creation": "contracts/visual-source-creation-task-v1.md"
+  },
+  "result_schema_ref": "contracts/design-result-manifest-v1.md",
+  "review_policy_notes": [
+    "Visual approval and source readiness are review_required, not blocked.",
+    "Use blocked only for missing/contradictory inputs or inaccessible required artifacts."
+  ],
+  "standalone_supported": true
+}
