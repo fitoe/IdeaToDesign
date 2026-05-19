@@ -61,6 +61,28 @@ Before handing to implementation:
 - downstream artifacts identify routes/pages and maturity targets
 - no secrets/tokens/private credentials are stored in design artifacts
 
+## Kanban Provider Mode
+
+Use this mode when invoked through a `kanban-capability-task/v1` envelope, a provider registry entry, or Javis/PlanToDelivery kanban dispatch. In this mode, `idea-to-design` is a provider, not the project orchestrator.
+
+Advertised capabilities:
+- `product_visual_design`: product/design spec, flows, page inventory, design decisions, open questions, and approval-ready visual direction;
+- `visual_source_creation`: persisted visual sources, prompt/output records, visual-source contract, design freeze evidence, and implementation handoff inputs.
+
+Provider rules:
+- accept only the active slice and input artifact refs from the task envelope; do not reopen the whole project unless the task explicitly asks for global design reconciliation;
+- produce artifacts under the requested output root when provided, otherwise under `project-state/design/` or the project-approved design artifact directory;
+- return a `kanban-capability-result/v1`-shaped manifest instead of a prose-only handoff;
+- include `capability`, `result`, `changed_files`, `produced_artifacts`, `evidence`, `blockers`, `debts`, `review_required`, and `next_recommended_task`;
+- do not mark global design gates passed; recommend gate updates and let the orchestrator record them;
+- set `review_required: true` when visual direction, generated source, Level 3 handoff, or design freeze needs human/orchestrator review. This is not a `blocked` result unless required inputs are missing or contradictory.
+
+Result semantics:
+- `completed`: requested design capability and artifacts are ready for orchestrator review/consumption;
+- `partial`: usable artifacts exist but specific gaps/debts remain; list the missing artifacts or decisions precisely;
+- `blocked`: required input, approval, source asset, permission, or non-waivable product decision is missing.
+
+Prefer manifest artifact paths over long descriptions. Keep design rationale concise and put heavy visual analysis, prompts, image paths, Visual IR, and review notes in files.
 
 ## PlanToDelivery Project-State Collaboration
 
