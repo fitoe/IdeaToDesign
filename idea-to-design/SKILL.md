@@ -104,6 +104,15 @@ Typical artifacts:
 
 Set `review_required: true` for visual direction, generated source, Level-3 handoff, design freeze, or any user-facing design decision. This routes to review, not generic blocked.
 
+## Collaboration boundary
+
+- Upstream owner: PlanToDelivery/Javis provides the active slice, artifact refs, review policy, blocking policy, and allowed side effects.
+- Downstream consumers: IdeaToTech consumes approved product/design artifacts for technical planning; DesignToCode consumes frozen visual sources, Visual IR, and Level-3 handoff artifacts for implementation.
+- Provider output is advisory until PlanToDelivery ingests the manifest and records canonical state.
+- If the source is not yet approved, return artifacts with `review_required: true`; do not route implementation as if the gate passed.
+- If the requested output would require architecture or coding decisions, recommend `technical_blueprint`, `implementation_planning`, or `visual_implementation` instead of performing that work here.
+- See `docs/provider-collaboration-v2.md` in the source repository for the full provider boundary.
+
 ## Gate discipline
 
 - Providers recommend; Javis/PlanToDelivery records canonical gates.

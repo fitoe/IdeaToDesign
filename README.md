@@ -9,6 +9,15 @@
 
 ## 项目定位
 
+### Javis / PlanToDelivery V2 provider mode
+
+`IdeaToDesign` 现在也是 Javis/Kanban V2 的设计 provider kernel。它通过 `contracts/provider-manifest.json` 暴露：
+
+- `product_visual_design`
+- `visual_source_creation`
+
+在 provider mode 中，它接收 `kanban-capability-task/v1`，产出 `kanban-capability-result/v1` 和设计/视觉源 artifacts。PlanToDelivery 负责 provider registry、canonical gates、review 和 progress；IdeaToDesign 只负责当前 active slice 的设计产物与 gate 建议。详细协作边界见 [docs/provider-collaboration-v2.md](docs/provider-collaboration-v2.md)。
+
 `IdeaToDesign` 适用于以下场景：
 
 - 只有一句模糊想法，希望快速整理为产品方案
@@ -116,6 +125,16 @@
 ---
 
 ## 目录结构
+
+Provider/kernel 相关文件：
+
+- [idea-to-design/SKILL.md](idea-to-design/SKILL.md) — runtime skill kernel
+- [contracts/provider-manifest.json](contracts/provider-manifest.json) — provider manifest
+- [contracts/product-visual-design-task-v1.md](contracts/product-visual-design-task-v1.md) — `product_visual_design` task contract
+- [contracts/visual-source-creation-task-v1.md](contracts/visual-source-creation-task-v1.md) — `visual_source_creation` task contract
+- [contracts/design-result-manifest-v1.md](contracts/design-result-manifest-v1.md) — result manifest contract
+- [docs/provider-collaboration-v2.md](docs/provider-collaboration-v2.md) — cross-provider boundaries and gate discipline
+- [docs/plans/2026-05-20-kanban-provider.md](docs/plans/2026-05-20-kanban-provider.md) — V2 provider redesign plan
 
 当前仓库结构如下：
 
