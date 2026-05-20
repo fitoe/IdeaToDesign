@@ -2,7 +2,6 @@
 
 [![Skill](https://img.shields.io/badge/agent--skill-IdeaToDesign-7c3aed)](#)
 [![Provider](https://img.shields.io/badge/Javis%20%2F%20PlanToDelivery-Kanban%20Provider-0ea5e9)](#)
-[![License](https://img.shields.io/badge/license-MIT-green)](LICENSE)
 
 **IdeaToDesign turns a rough product idea into a reviewable design package.**
 
