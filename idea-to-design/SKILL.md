@@ -68,7 +68,7 @@ Minimum fields:
   "blockers": [],
   "debts": [],
   "review_required": true,
-  "suggested_gate_updates": [],
+  "suggested_kanban_updates": [],
   "next_recommended_task": null
 }
 ```
@@ -115,7 +115,10 @@ Set `review_required: true` for visual direction, generated source, Level-3 hand
 
 ## Gate discipline
 
-- Providers recommend; Javis/PlanToDelivery records canonical gates.
+- Providers recommend; Javis/PlanToDelivery records canonical Kanban gates.
+- IdeaToDesign must not create, complete, approve, or unlock Hermes Kanban stage Gates directly. In P2D mode it may only return `kanban-capability-result/v1` evidence plus `suggested_kanban_updates`; the orchestrator decides and applies concrete Kanban card/link/review transitions.
+- Design artifacts, visual sources, local JSON, provider manifests, and prose recommendations cannot unlock downstream technical planning/implementation work by themselves.
+- If a product/content/IA/visual-source/design-freeze decision affects whether downstream work may start, report it as a suggested Kanban update with the proposed Gate/card title, dependency target, required approval artifact, and reason it affects stage admission.
 - Do not mark global design gates passed.
 - Do not directly edit global execution progress unless the task explicitly authorizes it.
 - If design changes supersede earlier artifacts, mark affected outputs as `stale` or `superseded` in the result/debt notes.
