@@ -129,9 +129,15 @@ Set `review_required: true` for visual direction, generated source, Level-3 hand
 1. Clarify the smallest missing design fact only when it blocks the active slice.
 2. Prefer concrete artifacts over prose.
 3. Persist visual sources and source paths before claiming design readiness.
-4. Extract implementation facts after approval: page type, route intent, viewport, section order, density, card/list anatomy, action hierarchy, asset strategy, and must-not-do rules.
-5. For flat PNG/GPT Image/mockup sources, produce lightweight Visual IR rather than long prose-only handoff.
-6. Avoid reopening broad visual exploration after approval unless the source is missing, stale, rejected, or requirements changed.
+4. **Generated design source rule:** when producing any user-facing “设计图”, “视觉源”, “视觉板”, “设计稿”, “mockup”, or design draft, create it through the configured GPT Image2/image-generation workflow and save the raw generated image locally as the design source. Do not use local browser screenshots, coded HTML previews, implementation screenshots, or Playwright captures as design-source artifacts unless the user explicitly asks for screenshot evidence rather than a design image.
+5. **High-quality visual prompt protocol:** before writing prompts for homepages, landing pages, brand-defining screens, key visual approval images, or any generated design source that must reach `distinctive` / `excellent` maturity, load `references/high-quality-visual-prompt-protocol.md`. Compile the image prompt from design decisions rather than a long wishlist, including Prompt Brief Card, Design DNA Card, Content Evidence Ledger, One Memorable Move, Page Narrative Map, Canvas Contract, Asset Strategy, Prompt Lint, and the final image prompt. For regulated, factual, or trust-sensitive domains such as healthcare, government, finance, education, manufacturing, SaaS, ecommerce, legal, nonprofit, and local services, also load `references/domain-visual-risk-packs.md` and add the relevant factual-safety constraints to the prompt.
+6. **GPT Image2 quality-tier rule:** use `gpt-image-2-high` for homepage/landing-page hero and other final/key visual approval boards where visual quality drives the whole project direction. Use `gpt-image-2-medium` for ordinary secondary pages, non-final iteration boards, and most follow-up page batches. Avoid `gpt-image-2-low` for user-facing approval artifacts except rough private exploration explicitly marked as draft. If the configured default is medium, temporarily switch or route the homepage/key-page generation through the high tier, then return to medium for other pages.
+7. **Generated-image delivery rule:** after `image_generate` succeeds, save/copy the raw generated image to the project artifact path and send it to the user immediately via `MEDIA:`. Do not run `vision_analyze` or other recognition/OCR checks on the generated image before sending unless the user explicitly asks for inspection, there is a tool/runtime error, the file is missing/empty, or the task is verification rather than design delivery. For routine design approval images, only perform cheap file-level checks such as existence, size, and dimensions if needed.
+8. **Complete-page / flexible-board design rule:** generated design sources must show complete, decisionable page/screen states, but they do not have to be strictly one page per image. Choose the board layout by review usefulness and page type: homepages and key/complex pages usually deserve a single complete-page image; secondary desktop pages may be paired as two complete pages side-by-side; mobile/H5 flows may combine up to about three complete phone pages/states in one board when readability remains strong. Never use a board that squeezes 4–5 pages into one image with cropped/half-page previews as the approval artifact. If a multi-page board is used, every included page/state must be complete enough for approval and later implementation extraction; otherwise split into separate generated sources.
+9. Clearly label artifact roles in manifests and review packets: `design_source` for GPT Image2/generated design files; `implementation_screenshot` / `verification_evidence` for local browser screenshots. Never present verification screenshots as design drawings.
+10. Extract implementation facts after approval: page type, route intent, viewport, section order, density, card/list anatomy, action hierarchy, asset strategy, and must-not-do rules.
+11. For flat PNG/GPT Image/mockup sources, produce lightweight Visual IR rather than long prose-only handoff.
+12. Avoid reopening broad visual exploration after approval unless the source is missing, stale, rejected, or requirements changed.
 
 ## Progressive references
 
@@ -142,6 +148,8 @@ Load only when needed:
 - `references/review-checklists.md` — product/visual review prompts.
 - `references/creative-direction-system.md` — visual direction exploration.
 - `references/aesthetic-review-system.md` — aesthetic review.
+- `references/high-quality-visual-prompt-protocol.md` — compile homepage, landing-page, brand-defining, and key visual approval image prompts from design decisions instead of generic wishlists.
+- `references/domain-visual-risk-packs.md` — factual-safety and domain-fit constraints for healthcare, government, finance, manufacturing, SaaS/AI, ecommerce, education, legal, nonprofit, and local-service visuals.
 - `references/prompt-patterns.md` — image/mockup prompt patterns.
 - `templates/level-3-handoff-pack.md` — complete Level-3 handoff shape.
 
