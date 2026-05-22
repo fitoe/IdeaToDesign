@@ -32,6 +32,34 @@ Do not use for routine code implementation after a frozen handoff; route that to
 
 Read only the active-slice context unless the task explicitly requests global design reconciliation.
 
+### Mandatory P2D provider admission
+
+When invoked by PlanToDelivery/Javis/P2D/Hermes Kanban, IdeaToDesign must not start from chat history, restored TODOs, or an informal `继续` instruction alone.
+
+Before producing canonical design artifacts in P2D mode, verify:
+
+1. `kanban-capability-task/v1` task envelope path;
+2. `active-slice-digest/v1` path whose provenance matches the task envelope;
+3. capability is `product_visual_design` or `visual_source_creation`;
+4. current Hermes Kanban card is claimed/running for that task;
+5. `output_root` is defined and result manifest path will be `output_root/result-manifest.json`;
+6. `design_contract` contains target pages, acceptance criteria, and the capability-specific design input;
+7. `visual_source_creation` includes approved design direction;
+8. `expected_outputs`, `verification_expectations`, and `allowed_side_effects` are explicit.
+
+Run the local admission guard when available:
+
+```bash
+python3 idea-to-design/scripts/check-provider-context.py \
+  --task "$OUTPUT_ROOT/task-envelope.json" \
+  --digest "$OUTPUT_ROOT/active-slice-digest.json" \
+  --card-status "$OUTPUT_ROOT/card-status.json"
+```
+
+`--skip-running-check` is only for local contract tests or isolated dry-runs. In real PlanToDelivery/Hermes Kanban orchestration, missing running-card proof is a blocker.
+
+If the guard cannot be run or any required item is missing, return a `blocked` result naming the missing artifact/check. Do not create or overwrite design artifacts first.
+
 Expected task envelope fields:
 
 - `schema: kanban-capability-task/v1`

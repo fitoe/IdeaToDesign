@@ -11,9 +11,53 @@
     "visual_source_creation": "contracts/visual-source-creation-task-v1.md"
   },
   "result_schema_ref": "contracts/design-result-manifest-v1.md",
+  "admission_contract": {
+    "task_schema": "kanban-capability-task/v1",
+    "active_slice_digest_schema": "active-slice-digest/v1",
+    "result_schema": "kanban-capability-result/v1",
+    "result_manifest_path": "output_root/result-manifest.json",
+    "local_checker": "idea-to-design/scripts/check-provider-context.py",
+    "required_checks": [
+      "running_card_required",
+      "task_envelope_schema",
+      "active_slice_digest_schema",
+      "task_id_match",
+      "capability_match",
+      "output_root_result_manifest_path",
+      "expected_outputs_present",
+      "allowed_side_effects_present",
+      "design_brief_present",
+      "target_pages_present",
+      "acceptance_criteria_present",
+      "approved_direction_required_for_visual_source_creation",
+      "result_manifest_schema_when_present"
+    ],
+    "required_task_fields": [
+      "schema",
+      "task_id",
+      "capability",
+      "project_root",
+      "active_slice",
+      "output_root",
+      "expected_outputs",
+      "verification_expectations",
+      "allowed_side_effects",
+      "review_policy",
+      "blocking_policy",
+      "design_contract",
+      "kanban_constraints"
+    ]
+  },
+  "result_semantics": {
+    "completed": "Requested design artifacts were produced and are ready for orchestrator/user review or downstream provider consumption after approval.",
+    "partial": "Usable design artifacts exist, but named decisions, pages, states, assets, or handoff fields remain missing.",
+    "blocked": "Required product input, target scope, approved direction, artifact access, permission, or non-waivable design decision is missing or contradictory.",
+    "failed": "No usable design artifact was produced; include cause and recovery recommendation."
+  },
   "review_policy_notes": [
     "Visual approval and source readiness are review_required, not blocked.",
-    "Use blocked only for missing/contradictory inputs or inaccessible required artifacts."
+    "Use blocked only for missing/contradictory inputs, missing approved direction for visual_source_creation, or inaccessible required artifacts.",
+    "IdeaToDesign may suggest Kanban updates, but PlanToDelivery records canonical gates and downstream unlocks."
   ],
   "standalone_supported": true
 }
