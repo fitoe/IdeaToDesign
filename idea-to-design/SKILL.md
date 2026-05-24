@@ -60,6 +60,25 @@ python3 idea-to-design/scripts/check-provider-context.py \
 
 If the guard cannot be run or any required item is missing, return a `blocked` result naming the missing artifact/check. Do not create or overwrite design artifacts first.
 
+Immediately before any filesystem write in P2D mode, run the public pre-write guard with the exact files about to change:
+
+```bash
+PYTHONPATH=/home/imjzq/Projects/PlanToDelivery \
+python3 /home/imjzq/Projects/PlanToDelivery/.agents/skills/plantodelivery/scripts/p2d_enforce.py \
+  --project-root "$PROJECT_ROOT" \
+  --board "$BOARD" \
+  prewrite \
+  --task-envelope "$OUTPUT_ROOT/task-envelope.json" \
+  --active-slice-digest "$OUTPUT_ROOT/active-slice-digest.json" \
+  --execution-permit "$OUTPUT_ROOT/execution-permit.json" \
+  --expected-capability "$CAPABILITY" \
+  --changed-file "relative/path/about-to-change"
+```
+
+Repeat `--changed-file` for every intended file. Run this before `write_file`, `patch`, design artifact writes, generated images copied into project state, evidence writes, or `result-manifest.json` writes. If `prewrite` exits non-zero, do not write; return a `blocked` result naming the guard error.
+
+The Python API `assert_provider_write_allowed(ctx, changed_files, review_required=True)` is the equivalent in-process guard, but the CLI above is preferred for auditability. Evidence files and manifests are not allowed to bypass this check.
+
 Expected task envelope fields:
 
 - `schema: kanban-capability-task/v1`
