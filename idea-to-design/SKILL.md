@@ -76,6 +76,18 @@ Typical artifacts:
 4. Homepage/key visual direction usually needs a single complete high-quality design image. Secondary pages may be grouped only if each page/state remains readable and complete.
 5. After generating an approval image, deliver it promptly. Do not run extra critique/vision analysis unless the user asks for inspection or the file/tool failed.
 
+## Strong-Gate Visual Generation Guard
+
+When the user asks to generate a visual draft, design mockup, visual board, homepage direction, or “视觉稿” inside a strong-gate Javis/Kanban project, treat it as a design-provider task, not as a free-standing image-generation action.
+
+Required behavior:
+
+1. Verify the active slice/card names released scope, page/state target, allowed changes, approval target, and downstream dependency impact.
+2. If the user is restarting, shrinking, or replacing scope, require Javis to create or update the corresponding scope-change or visual-source gate before generation.
+3. Do not generate visual drafts directly from the main conversation when the project requires Kanban gates, even if the request sounds small, such as “只做首页”, “只要 Hero”, or “先出个视觉稿”.
+4. A generated draft is review evidence only. It does not unlock D2C or implementation until Javis records explicit user approval.
+5. If older visual sources are rejected or superseded, mark them stale in the design artifacts/handoff and avoid reusing them as visual references unless the user explicitly restores them.
+
 ## Mode Behavior
 
 | Mode | Behavior |
